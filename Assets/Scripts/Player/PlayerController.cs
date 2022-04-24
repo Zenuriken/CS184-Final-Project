@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
    }
 
    private void Start() {
-       Cursor.lockState = CursorLockMode.Locked;
+       //Cursor.lockState = CursorLockMode.Locked;
    }
    #endregion
 
@@ -135,14 +135,14 @@ public class PlayerController : MonoBehaviour
        // Update the rotation of the player
        cc_Rb.angularVelocity = Vector3.zero;
        
-       if (p_Velocity.sqrMagnitude > 0) {
-           float angleToRotCam = Mathf.Deg2Rad * Vector2.SignedAngle(Vector2.up, p_Velocity);
-           Vector3 camForward = m_CameraTransform.forward;
-           Vector3 newRot = new Vector3(Mathf.Cos(angleToRotCam) * camForward.x - Mathf.Sin(angleToRotCam) * camForward.z, 0,
-                Mathf.Cos(angleToRotCam) * camForward.z + Mathf.Sin(angleToRotCam) * camForward.x);
-            float theta = Vector3.SignedAngle(transform.forward, newRot, Vector3.up);
-            cc_Rb.rotation = Quaternion.Slerp(cc_Rb.rotation, cc_Rb.rotation * Quaternion.Euler(0, theta, 0), 0.2f);
-       }
+    //    if (p_Velocity.sqrMagnitude > 0) {
+    //        float angleToRotCam = Mathf.Deg2Rad * Vector2.SignedAngle(Vector2.up, p_Velocity);
+    //        Vector3 camForward = m_CameraTransform.forward;
+    //        Vector3 newRot = new Vector3(Mathf.Cos(angleToRotCam) * camForward.x - Mathf.Sin(angleToRotCam) * camForward.z, 0,
+    //             Mathf.Cos(angleToRotCam) * camForward.z + Mathf.Sin(angleToRotCam) * camForward.x);
+    //         float theta = Vector3.SignedAngle(transform.forward, newRot, Vector3.up);
+    //         cc_Rb.rotation = Quaternion.Slerp(cc_Rb.rotation, cc_Rb.rotation * Quaternion.Euler(0, theta, 0), 0.2f);
+    //    }
    }
    #endregion
 
