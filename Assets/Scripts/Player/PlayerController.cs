@@ -178,12 +178,20 @@ public class PlayerController : MonoBehaviour
         // Vector3 left = Vector3.Cross(dir, Vector3.up).normalized;
         // Vector3 right = -left;
 
-        cc_Rb.velocity = new Vector3(velocityX * m_Speed, 0, velocityZ * m_Speed);
     }
 
     // Use for code involving physics because frame rate can varying system to system.
     private void FixedUpdate()
     {   
+        Vector3 camForward = m_CameraTransform.forward;
+        float cosTheta = Vector3.Dot(Vector3.up, camForward) / (camForward.magnitude * Vector3.up.magnitude);
+        float theta = Mathf.Acos(cosTheta); // In radians
+
+
+        p_Velocity = new Vector2(Mathf.Cos)
+        cc_Rb.velocity = new Vector3(velocityX * m_Speed, 0, velocityZ * m_Speed);
+        
+        
         // p_Velocity = new Vector2(velocityX, velocityZ);
         
         // // Update the rotation of the player
