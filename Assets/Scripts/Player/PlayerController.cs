@@ -5,159 +5,354 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-   #region Editor Variables
-   [SerializeField]
-   [Tooltip("How fast the player should move when running around.")]
-   private float m_Speed;
+    #region Editor Variables
+    [SerializeField]
+    [Tooltip("How fast the player should move when running around.")]
+    private float m_Speed;
 
-   [SerializeField]
-   [Tooltip("The transform of the camera following the player")]
-   private Transform m_CameraTransform;
+    [SerializeField]
+    [Tooltip("The transform of the camera following the player")]
+    private Transform m_CameraTransform;
 
-   [SerializeField]
-   [Tooltip("A list of all attacks and information about them")]
-   private PlayerAttackInfo[] m_Attacks;
+    [SerializeField]
+    [Tooltip("A list of all attacks and information about them")]
+    private PlayerAttackInfo[] m_Attacks;
 
-   [SerializeField]
-   [Tooltip("Amount of health that the player starts with")]
-   private int m_MaxHealth;
+    [SerializeField]
+    [Tooltip("Amount of health that the player starts with")]
+    private int m_MaxHealth;
 
-   [SerializeField]
-   [Tooltip("The HUD script")]
-   private HUDController m_HUD;
+    [SerializeField]
+    [Tooltip("The HUD script")]
+    private HUDController m_HUD;
 
-   #endregion
+    #endregion
 
     #region Cached References
     private Animator cr_Anim;
     private Renderer cr_Renderer;
     #endregion
 
-   #region Cached Components
-   private Rigidbody cc_Rb;
-   #endregion
+    #region Cached Components
+    private Rigidbody cc_Rb;
+    #endregion
 
-   #region Private Variables
-   // The current move direction of the player.. Does NOT include magnitude
-   private Vector2 p_Velocity;
+    #region Private Variables
+    // The current move direction of the player.. Does NOT include magnitude
+    private Vector2 p_Velocity;
 
-   // In order to do anything, we cannot be frozen (timer must be 0)
-   private float p_FrozenTimer;
+    // Movement booleans
+    private bool forwardPressed;
+    private bool backwardPressed;
+    private bool leftPressed;
+    private bool rightPressed;
+    private bool runPressed;
 
-   // The default color. Cached so we can switch between colors
-   private Color p_DefaultColor;
+    // Velocity variables
+    private float velocityZ = 0.0f;
+    private float velocityX = 0.0f;
+    public float acceleration = 2.0f;
+    public float deceleration = 2.0f;
+    public float maximumWalkVelocity = 0.5f;
+    public float maximumRunVelocity = 2.0f;
 
-   // Current amount of health that the player has
-   private float p_CurHealth;
-   #endregion
+    // increase performance
+    int VelocityZHash;
+    int VelocityXHash;
 
-   #region Initialization
-   private void Awake() {
-       p_Velocity = Vector2.zero;
-       cc_Rb = GetComponent<Rigidbody>();
-       cr_Anim = GetComponent<Animator>();
-       cr_Renderer = GetComponentInChildren<Renderer>();
-       p_DefaultColor = cr_Renderer.material.color;
+    // In order to do anything, we cannot be frozen (timer must be 0)
+    private float p_FrozenTimer;
 
-       p_FrozenTimer = 0;
-       p_CurHealth = m_MaxHealth;
+    // The default color. Cached so we can switch between colors
+    private Color p_DefaultColor;
 
-       for (int i = 0; i < m_Attacks.Length; i++) {
-           PlayerAttackInfo attack = m_Attacks[i];
-           attack.Cooldown = 0;
+    // Current amount of health that the player has
+    private float p_CurHealth;
 
-           if (attack.WindUpTime > attack.FrozenTime) {
-               Debug.LogError(attack.AttackName + " has a wind up time that is larger than the amount of time that the player is frozen for");
-           }
-       }
-   }
+    // Camera references
+    private Vector3 camForward;
+    private float camAngleFromZAxis;
 
-   private void Start() {
-       //Cursor.lockState = CursorLockMode.Locked;
-   }
-   #endregion
 
-   #region Main Updates
-   private void Update() {
-       if (p_FrozenTimer > 0) {
-           p_Velocity = Vector2.zero;
-           p_FrozenTimer -= Time.deltaTime;
-           return;
-       } else {
-           p_FrozenTimer = 0;
-       }
+    #endregion
 
-       // Ability use
-       for (int i = 0; i < m_Attacks.Length; i ++) {
-           PlayerAttackInfo attack = m_Attacks[i];
+    #region Initialization
+    private void Awake()
+    {
+        p_Velocity = Vector2.zero;
+        cc_Rb = GetComponent<Rigidbody>();
+        cr_Anim = GetComponent<Animator>();
+        cr_Renderer = GetComponentInChildren<Renderer>();
+        p_DefaultColor = cr_Renderer.material.color;
 
-           if (attack.IsReady()) {
-               if (Input.GetButtonDown(attack.Button)) {
-                   p_FrozenTimer = attack.FrozenTime;
-                   DecreaseHealth(attack.HealthCost);
-                   StartCoroutine(UseAttack(attack));
-                   break;
-               }
-           } else if (attack.Cooldown > 0) {
-               attack.Cooldown -= Time.deltaTime;
-           }
-       }
+        VelocityZHash = Animator.StringToHash("Velocity Z");
+        VelocityXHash = Animator.StringToHash("Velocity X");
 
-       // Set how hard the player is pressing movement buttons
-       float forward = Input.GetAxis("Vertical");
-       float right = Input.GetAxis("Horizontal");
 
-       // Updating the animation
-       cr_Anim.SetFloat("Speed", Mathf.Clamp01(Mathf.Abs(forward) + Mathf.Abs(right)));
 
-       // Updating velocity
-       float moveThreshold = 0.3f;
+        p_FrozenTimer = 0;
+        p_CurHealth = m_MaxHealth;
 
-       if (forward > 0 && forward < moveThreshold) {
-           forward = 0;
-       } else if (forward < 0 && forward > -moveThreshold) {
-           forward = 0;
-       }
-       if (right > 0 && right < moveThreshold) {
-           right = 0;
-       }
-       if (right < 0 && right > -moveThreshold) {
-           right = 0;
-       }
-       p_Velocity.Set(right, forward);
-   }
+        for (int i = 0; i < m_Attacks.Length; i++)
+        {
+            PlayerAttackInfo attack = m_Attacks[i];
+            attack.Cooldown = 0;
+
+            if (attack.WindUpTime > attack.FrozenTime)
+            {
+                Debug.LogError(attack.AttackName + " has a wind up time that is larger than the amount of time that the player is frozen for");
+            }
+        }
+    }
+
+    private void Start()
+    {
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
+    #endregion
+
+    #region Main Updates
+    private void Update()
+    {
+        // How long the player is frozen in space after using an attack
+        if (p_FrozenTimer > 0)
+        {
+            p_FrozenTimer -= Time.deltaTime;
+            return;
+        }
+        else
+        {
+            p_FrozenTimer = 0;
+        }
+
+        // Ability use
+        for (int i = 0; i < m_Attacks.Length; i++)
+        {
+            PlayerAttackInfo attack = m_Attacks[i];
+
+            if (attack.IsReady())
+            {
+                if (Input.GetButtonDown(attack.Button))
+                {
+                    p_FrozenTimer = attack.FrozenTime;
+                    DecreaseHealth(attack.HealthCost);
+                    StartCoroutine(UseAttack(attack));
+                    break;
+                }
+            }
+            else if (attack.Cooldown > 0)
+            {
+                attack.Cooldown -= Time.deltaTime;
+            }
+        }
+
+        // Input for movement
+        forwardPressed = Input.GetKey(KeyCode.W);
+        backwardPressed = Input.GetKey(KeyCode.S);
+        leftPressed = Input.GetKey(KeyCode.A);
+        rightPressed = Input.GetKey(KeyCode.D);
+        runPressed = Input.GetKey(KeyCode.LeftShift);
+
+        // Set current maxVelocity depending on if runPressed is true.
+        float currentMaxVelocity = 0;
+        if (runPressed && forwardPressed) {
+            currentMaxVelocity = maximumRunVelocity;
+        } else {
+            currentMaxVelocity = maximumWalkVelocity;
+        }
+
+        // Set our animation variables
+        cr_Anim.SetFloat(VelocityZHash, velocityZ);
+        cr_Anim.SetFloat(VelocityXHash, velocityX);
+
+        ChangeVelocity(forwardPressed, backwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
+        LockOrResetVelocity(forwardPressed, backwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
+    }
 
     // Use for code involving physics because frame rate can varying system to system.
-   private void FixedUpdate() {
-       // Update the position of the player
-       cc_Rb.MovePosition(cc_Rb.position + m_Speed * Time.fixedDeltaTime * transform.forward * p_Velocity.magnitude);
+    private void FixedUpdate()
+    {   
+        // If the player presses forward, then align the avatar's body to face the same direction as the camera. 
+        if (forwardPressed || backwardPressed) {
+            Vector3 playerForward = transform.forward;
+            float playerAngleFromZAxis = 0;
+            if (playerForward.x < 0) {
+                playerAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+            } else {
+                playerAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+            }
+            float angleToRotatePlayer = Vector3.SignedAngle(playerForward, camForward, Vector3.forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,0), 0.2f);
+        }
 
-       // Update the rotation of the player
-       cc_Rb.angularVelocity = Vector3.zero;
-       
-       if (p_Velocity.sqrMagnitude > 0) {
-           float angleToRotCam = Mathf.Deg2Rad * Vector2.SignedAngle(Vector2.up, p_Velocity);
-           Vector3 camForward = m_CameraTransform.forward; // Returns a normalized vector of direction camera is facing.
-           Vector3 newRot = new Vector3(Mathf.Cos(angleToRotCam) * camForward.x - Mathf.Sin(angleToRotCam) * camForward.z, 0,
-                Mathf.Cos(angleToRotCam) * camForward.z + Mathf.Sin(angleToRotCam) * camForward.x);
-            float theta = Vector3.SignedAngle(transform.forward, newRot, Vector3.up);
-            cc_Rb.rotation = Quaternion.Slerp(cc_Rb.rotation, cc_Rb.rotation * Quaternion.Euler(0, theta, 0), 0.2f);
-       }
-   }
-   #endregion
+        // If the player is only strafing, then do not update velocity direction of the player.
+        if ((!leftPressed && !rightPressed) || forwardPressed || backwardPressed) {
+            camForward = m_CameraTransform.forward;
+            if (camForward.x < 0) {
+                camAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+            } else {
+                camAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+            }
+        }
+
+        // Calculate the new player velocity based on camera direction if the player isn't currently frozen
+        if (p_FrozenTimer == 0) {
+            p_Velocity = new Vector2(velocityX * Mathf.Cos(camAngleFromZAxis) + velocityZ * Mathf.Sin(camAngleFromZAxis),
+                             velocityX * -Mathf.Sin(camAngleFromZAxis) + velocityZ * Mathf.Cos(camAngleFromZAxis));
+            Vector2 p_Velocity_norm = p_Velocity.normalized;
+            cc_Rb.velocity = new Vector3(p_Velocity.x * m_Speed, 0, p_Velocity.y * m_Speed);
+        } else {
+            p_Velocity = Vector2.zero;
+        }
+
+        // Set the player's velocity
+        cc_Rb.velocity = new Vector3(p_Velocity.x * m_Speed, 0, p_Velocity.y * m_Speed);
+    }
+    #endregion
+
+    #region Movement
+    // Changes the velocity based on player input
+    private void ChangeVelocity(bool forwardPressed, bool backwardPressed, bool leftPressed, bool rightPressed, bool runPressed, float currentMaxVelocity) {
+        // If player presses forward, increase velocity in z-direction.
+        if (forwardPressed && velocityZ < currentMaxVelocity)
+        {
+            velocityZ += Time.deltaTime * acceleration;
+        }
+
+        // If player presses backward, decrease velocity in z-direction.
+        if (backwardPressed && velocityZ > -currentMaxVelocity)
+        {
+            velocityZ -= Time.deltaTime * acceleration;
+        }
+
+        // If player presses left, increase velocity in left direction.
+        if (leftPressed && velocityX > -currentMaxVelocity)
+        {
+            velocityX -= Time.deltaTime * acceleration;
+        }
+
+        // If player presses right, increase velocity in right direction.
+        if (rightPressed && velocityX < currentMaxVelocity)
+        {
+            velocityX += Time.deltaTime * acceleration;
+        }
+
+        // Decrease velocityZ if forward is not pressed and velocityZ > 0
+        if (!forwardPressed && velocityZ > 0.0f)
+        {
+            velocityZ -= Time.deltaTime * deceleration;
+        }
+
+        // Increase velocityZ if backward is not pressed and velocityZ < 0
+        if (!backwardPressed && velocityZ < 0.0f)
+        {
+            velocityZ += Time.deltaTime * deceleration;
+        }
+
+
+         // Increase velocityX if left is not pressed and velocityX < 0
+        if (!leftPressed && velocityX < 0.0f) {
+            velocityX += Time.deltaTime * deceleration;
+        }
+
+        // Decrease velocityX if right is not pressed and velocityX > 0
+        if (!rightPressed && velocityX > 0.0f) {
+            velocityX -= Time.deltaTime * deceleration;
+        }
+    }
+
+    // Locks or resets velocity based on current velocity and inputs
+    void LockOrResetVelocity(bool forwardPressed, bool backwardPressed, bool leftPressed, bool rightPressed, bool runPressed, float currentMaxVelocity) {
+        // Reset velocityZ
+        if (!forwardPressed && !backwardPressed && velocityZ != 0.0f && (velocityZ > -0.05f) && velocityZ < 0.05f)
+        {
+            velocityZ = 0.0f;
+        }
+
+        // Reset velocityX
+        if (!leftPressed && !rightPressed && velocityX != 0.0f && (velocityX > -0.05f && velocityX < 0.05f))
+        {
+            velocityX = 0.0f;
+        }
+
+        // Locks the running movement from exceeding the maximum velocity
+        if (forwardPressed && runPressed && velocityZ > currentMaxVelocity) {
+            velocityZ = currentMaxVelocity;
+        // Decelerate to the maximum walk velocity
+        } else if (forwardPressed && velocityZ > currentMaxVelocity) {
+            velocityZ -= Time.deltaTime * deceleration;
+            // Round to the currentMaxVelocity if within offset
+            if (velocityZ > currentMaxVelocity && velocityZ < (currentMaxVelocity + 0.05)) {
+                velocityZ = currentMaxVelocity;
+            } 
+        // round to the currentMaxVelocity if within offset
+        } else if (forwardPressed && velocityZ < currentMaxVelocity && velocityZ > (currentMaxVelocity - 0.05f)) {
+            velocityZ = currentMaxVelocity;
+        }
+
+        // Locking back movement
+        if (backwardPressed && runPressed && velocityZ < -currentMaxVelocity) {
+            velocityZ = -currentMaxVelocity;
+        // Decelerate to the maximum walk velocity
+        } else if (backwardPressed && velocityZ < -currentMaxVelocity) {
+            velocityZ += Time.deltaTime * deceleration;
+            // Round to the currentMaxVelocity if within offset
+            if (velocityZ < -currentMaxVelocity && velocityZ > (-currentMaxVelocity - 0.05)) {
+                velocityZ = -currentMaxVelocity;
+            } 
+        // round to the currentMaxVelocity if within offset
+        } else if (backwardPressed && velocityZ > -currentMaxVelocity && velocityZ < (-currentMaxVelocity + 0.05f)) {
+            velocityZ = -currentMaxVelocity;
+        }
+
+        // Locking left movement
+        if (leftPressed && runPressed && velocityX < -currentMaxVelocity) {
+            velocityX = -currentMaxVelocity;
+        // Decelerate to the maximum walk velocity
+        } else if (leftPressed && velocityX < -currentMaxVelocity) {
+            velocityX += Time.deltaTime * deceleration;
+            // Round to the currentMaxVelocity if within offset
+            if (velocityX < -currentMaxVelocity && velocityX > (-currentMaxVelocity - 0.05)) {
+                velocityX = -currentMaxVelocity;
+            } 
+        // round to the currentMaxVelocity if within offset
+        } else if (leftPressed && velocityX > -currentMaxVelocity && velocityX < (-currentMaxVelocity + 0.05f)) {
+            velocityX = -currentMaxVelocity;
+        }
+
+        // Locks right movement
+        if (rightPressed && runPressed && velocityZ > currentMaxVelocity) {
+            velocityX = currentMaxVelocity;
+        // Decelerate to the maximum walk velocity
+        } else if (rightPressed && velocityX > currentMaxVelocity) {
+            velocityX -= Time.deltaTime * deceleration;
+            // Round to the currentMaxVelocity if within offset
+            if (velocityX > currentMaxVelocity && velocityX < (currentMaxVelocity + 0.05)) {
+                velocityX = currentMaxVelocity;
+            } 
+        // round to the currentMaxVelocity if within offset
+        } else if (rightPressed && velocityX < currentMaxVelocity && velocityX > (currentMaxVelocity - 0.05f)) {
+            velocityX = currentMaxVelocity;
+        }
+    }
+    #endregion
 
     #region Health/Dying Methods
-    public void DecreaseHealth(float amount) {
+    public void DecreaseHealth(float amount)
+    {
         p_CurHealth -= amount;
         m_HUD.UpdateHealth(1.0f * p_CurHealth / m_MaxHealth);
-        if (p_CurHealth <= 0) {
+        if (p_CurHealth <= 0)
+        {
             SceneManager.LoadScene("MainMenu");
         }
     }
 
-    public void IncreaseHealth(int amount) {
+    public void IncreaseHealth(int amount)
+    {
         p_CurHealth += amount;
-        if (p_CurHealth > m_MaxHealth) {
+        if (p_CurHealth > m_MaxHealth)
+        {
             p_CurHealth = m_MaxHealth;
         }
         m_HUD.UpdateHealth(1.0f * p_CurHealth / m_MaxHealth);
@@ -165,9 +360,11 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Attack Methods
-    private IEnumerator UseAttack(PlayerAttackInfo attack) {
-
+    private IEnumerator UseAttack(PlayerAttackInfo attack)
+    {
+        // Set the player to the current direction of the camera
         cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y, 0);
+        // Call the animation for the attack
         cr_Anim.SetTrigger(attack.TriggerName);
         IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
         StartCoroutine(toColor);
@@ -186,9 +383,11 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Misc Methods
-    private IEnumerator ChangeColor(Color newColor, float speed) {
+    private IEnumerator ChangeColor(Color newColor, float speed)
+    {
         Color curColor = cr_Renderer.material.color;
-        while (curColor != newColor) {
+        while (curColor != newColor)
+        {
             curColor = Color.Lerp(curColor, newColor, speed / 100);
             cr_Renderer.material.color = curColor;
             yield return null;
@@ -197,8 +396,10 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Collision Methods
-    private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("HealthPill")) {
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("HealthPill"))
+        {
             IncreaseHealth(other.GetComponent<HealthPill>().HealthGain);
             Destroy(other.gameObject);
         }

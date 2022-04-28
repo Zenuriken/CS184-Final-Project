@@ -37,6 +37,13 @@ public class CameraController : MonoBehaviour
         transform.LookAt(Target);
         // Rotates the camera based off of mouse movement
         Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+
+        // if (Input.GetKey(KeyCode.LeftControl)) {
+        //     Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+        // } else {
+        //     Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+        //     Player.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+        // }
     }
 
     void ViewObstructed() {
