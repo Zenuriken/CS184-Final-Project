@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate() {
         CamControl();
-        ViewObstructed();
+        //ViewObstructed();
     }
 
     void CamControl() {
