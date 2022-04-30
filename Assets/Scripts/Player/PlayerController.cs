@@ -73,6 +73,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 camForward;
     private float camAngleFromZAxis;
 
+    // Key Tracker
+    private int keys; 
+
 
     #endregion
 
@@ -87,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
         VelocityZHash = Animator.StringToHash("Velocity Z");
         VelocityXHash = Animator.StringToHash("Velocity X");
+
+        keys = 0;
 
 
 
@@ -403,6 +408,23 @@ public class PlayerController : MonoBehaviour
             IncreaseHealth(other.GetComponent<HealthPill>().HealthGain);
             Destroy(other.gameObject);
         }
+    }
+    #endregion
+
+    #region Key Functions
+    public void keys_increase()
+    {
+        keys++;
+    }
+
+    public int key_amount()
+    {
+        return keys;
+    }
+
+    public void key_decrease()
+    {
+        keys--;
     }
     #endregion
 }
