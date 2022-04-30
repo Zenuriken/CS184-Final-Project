@@ -10,7 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 477736}
   - component: {fileID: 10844700}
+<<<<<<< HEAD
   - component: {fileID: 5589193394852226971}
+=======
+  - component: {fileID: 926341796415607891}
+>>>>>>> Lena-2
   m_Layer: 0
   m_Name: Spotlight
   m_TagString: Untagged
@@ -44,9 +48,15 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
+<<<<<<< HEAD
   m_Color: {r: 0.7942996, g: 0.66202384, b: 0.8207547, a: 1}
   m_Intensity: 0.3
   m_Range: 10
+=======
+  m_Color: {r: 1, g: 0.99052215, b: 0.8349056, a: 1}
+  m_Intensity: 1
+  m_Range: 6
+>>>>>>> Lena-2
   m_SpotAngle: 165
   m_InnerSpotAngle: 159.24054
   m_CookieSize: 10
@@ -95,7 +105,11 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+<<<<<<< HEAD
 --- !u!114 &5589193394852226971
+=======
+--- !u!114 &926341796415607891
+>>>>>>> Lena-2
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

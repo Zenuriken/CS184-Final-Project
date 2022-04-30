@@ -8,7 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Neon_01
+<<<<<<< HEAD
   m_Shader: {fileID: -6465566751694194690, guid: 53fd34532105d44e29caec3b8c557d90,
+=======
+  m_Shader: {fileID: -6465566751694194690, guid: 58be8edcc567449a3b0d2637d2fc3350,
+>>>>>>> Lena-2
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -21,6 +25,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Mask_R_Emission:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -61,10 +73,13 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+<<<<<<< HEAD
     - _Texture2D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+=======
+>>>>>>> Lena-2
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -79,6 +94,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Brightness_Rim: 2
+    - Rim_Power: 5
+    - Toon_Ramp_Offset: 0.5
+    - Toon_Ramp_Smoothness: 0
+    - _Ambient: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -93,24 +113,40 @@ Material:
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
+<<<<<<< HEAD
     - _Rim_Brightness: 2
     - _Rim_Power: 3
+=======
+>>>>>>> Lena-2
     - _Shininess: 0.7
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+<<<<<<< HEAD
     - _Toon_Ramp_Offset: 0
     - _Toon_Ramp_Smoothness: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.9245283, g: 0.92260516, b: 0.9201673, a: 1}
+=======
+    - _Toon_Ramp_Offset_Point: 0.5
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - Toon_Ramp_Tint: {r: 0.490566, g: 0.490566, b: 0.490566, a: 1}
+    - _Color: {r: 0.48584908, g: 1, b: 0.9312402, a: 1}
+>>>>>>> Lena-2
     - _EmissionColor: {r: 1.7207954, g: 1.306363, b: 0.98202455, a: 1}
     - _EmissionColorUI: {r: 0.97794116, g: 0.7018166, b: 0.35234642, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Toon_Ramp_Tinting: {r: 0.9245283, g: 0.90007895, b: 0.8503916, a: 0}
   m_BuildTextureStacks: []
+<<<<<<< HEAD
 --- !u!114 &5236924357851755752
+=======
+--- !u!114 &3176073845580053932
+>>>>>>> Lena-2
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
