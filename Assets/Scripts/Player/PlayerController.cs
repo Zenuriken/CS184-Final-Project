@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
             if (attack.IsReady())
             {
-                if (Input.GetButtonDown(attack.Button))
+                if (false)//Input.GetButtonDown(attack.Button))
                 {
                     p_FrozenTimer = attack.FrozenTime;
                     DecreaseHealth(attack.HealthCost);
