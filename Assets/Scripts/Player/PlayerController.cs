@@ -11,6 +11,10 @@ public class PlayerController : MonoBehaviour
     private float m_Speed;
 
     [SerializeField]
+    [Tooltip("The angle offset of the player when facing forward in degrees.")]
+    private float angleOffset;
+
+    [SerializeField]
     [Tooltip("The transform of the camera following the player")]
     private Transform m_CameraTransform;
 
@@ -160,7 +164,7 @@ public class PlayerController : MonoBehaviour
 
         // Set current maxVelocity depending on if runPressed is true.
         float currentMaxVelocity = 0;
-        if (runPressed && forwardPressed) {
+        if (runPressed) {
             currentMaxVelocity = maximumRunVelocity;
         } else {
             currentMaxVelocity = maximumWalkVelocity;
@@ -177,27 +181,19 @@ public class PlayerController : MonoBehaviour
     // Use for code involving physics because frame rate can varying system to system.
     private void FixedUpdate()
     {   
-        // If the player presses forward, then align the avatar's body to face the same direction as the camera. 
-        if (forwardPressed || backwardPressed) {
-            Vector3 playerForward = transform.forward;
-            float playerAngleFromZAxis = 0;
-            if (playerForward.x < 0) {
-                playerAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
-            } else {
-                playerAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
-            }
-            float angleToRotatePlayer = Vector3.SignedAngle(playerForward, camForward, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,0), 0.2f);
-        }
+        // If the player presses forward, then align the avatar's body to face the same direction as the camera + angleOffset. 
+        if (forwardPressed || backwardPressed || leftPressed || rightPressed) {
+            
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y) + angleOffset,0), 0.2f);
 
-        // If the player is only strafing, then do not update velocity direction of the player.
-        if ((!leftPressed && !rightPressed) || forwardPressed || backwardPressed) {
+            // Get the angle of the camera from the z-axis, which will later be used to calculate the direction of the player's velocity
             camForward = m_CameraTransform.forward;
             if (camForward.x < 0) {
-                camAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+                camAngleFromZAxis = Mathf.Deg2Rad * (-Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             } else {
-                camAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+                camAngleFromZAxis = Mathf.Deg2Rad * (Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             }
+            Debug.Log("Cam Angle from Z Axis: " + camAngleFromZAxis);
         }
 
         // Calculate the new player velocity based on camera direction if the player isn't currently frozen
@@ -209,9 +205,6 @@ public class PlayerController : MonoBehaviour
         } else {
             p_Velocity = Vector2.zero;
         }
-
-        // Set the player's velocity
-        cc_Rb.velocity = new Vector3(p_Velocity.x * m_Speed, 0, p_Velocity.y * m_Speed);
     }
     #endregion
 

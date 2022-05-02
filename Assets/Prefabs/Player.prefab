@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Speed: 12
+  angleOffset: 90
   m_CameraTransform: {fileID: 2789177435114381481}
   m_Attacks:
   - m_name: Laser
