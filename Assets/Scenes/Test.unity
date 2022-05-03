@@ -703,6 +703,77 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0.52
       objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_name
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_Button
+      value: Fire1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_Cooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_offset.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_offset.y
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_offset.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_AbilityGO
+      value: 
+      objectReference: {fileID: 5683779467630789189, guid: 6eef301578036204bb7c8a6b4786dd21,
+        type: 3}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_FrozenTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_WindUpTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
+        type: 3}
+      propertyPath: m_Attacks.Array.data[0].m_TriggerName
+      value: isShooting
+      objectReference: {fileID: 0}
     - target: {fileID: 4078481234447869300, guid: 4d99e31ea4c97344f813afd436fe3b3a,
         type: 3}
       propertyPath: m_Name

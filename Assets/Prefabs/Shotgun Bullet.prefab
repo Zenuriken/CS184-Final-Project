@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 5683779467630789191}
   - component: {fileID: 5683779467630789190}
   - component: {fileID: 7418857674450373534}
+  - component: {fileID: 1057269803395848732}
   m_Layer: 0
   m_Name: Shotgun Bullet
   m_TagString: Untagged
@@ -255,3 +256,18 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &1057269803395848732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5683779467630789189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f3d719729a74e448fc972faa5ac95a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Info:
+    m_Power: 0
+    m_Range: 0

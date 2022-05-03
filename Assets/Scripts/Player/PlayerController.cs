@@ -141,10 +141,10 @@ public class PlayerController : MonoBehaviour
 
             if (attack.IsReady())
             {
-                if (false)//Input.GetButtonDown(attack.Button))
+                if (Input.GetButtonDown(attack.Button))
                 {
                     p_FrozenTimer = attack.FrozenTime;
-                    DecreaseHealth(attack.HealthCost);
+                    //DecreaseHealth(attack.HealthCost);
                     StartCoroutine(UseAttack(attack));
                     break;
                 }
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
             } else {
                 camAngleFromZAxis = Mathf.Deg2Rad * (Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             }
-            Debug.Log("Cam Angle from Z Axis: " + camAngleFromZAxis);
+            //Debug.Log("Cam Angle from Z Axis: " + camAngleFromZAxis);
         }
 
         // Calculate the new player velocity based on camera direction if the player isn't currently frozen
@@ -361,21 +361,21 @@ public class PlayerController : MonoBehaviour
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
         // Set the player to the current direction of the camera
-        cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y, 0);
+        //cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
         // Call the animation for the attack
         cr_Anim.SetTrigger(attack.TriggerName);
-        IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
-        StartCoroutine(toColor);
+        //IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
+        //StartCoroutine(toColor);
         yield return new WaitForSeconds(attack.WindUpTime);
 
         Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
         GameObject go = Instantiate(attack.AbilityGO, transform.position + offset, cc_Rb.rotation);
         go.GetComponent<Ability>().Use(transform.position + offset);
 
-        StopCoroutine(toColor);
-        StartCoroutine(ChangeColor(p_DefaultColor, 50));
+        //StopCoroutine(toColor);
+        //StartCoroutine(ChangeColor(p_DefaultColor, 50));
         yield return new WaitForSeconds(attack.Cooldown);
-
+        cr_Anim.ResetTrigger(attack.TriggerName);
         attack.ResetCooldown();
     }
     #endregion
