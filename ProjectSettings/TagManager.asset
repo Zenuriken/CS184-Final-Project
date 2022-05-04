@@ -10,6 +10,7 @@ TagManager:
   - AttackAbility
   - Enemy
   - Spawn
+  - Weapon
   layers:
   - Default
   - TransparentFX

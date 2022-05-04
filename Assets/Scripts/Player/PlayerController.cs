@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The HUD script")]
     private HUDController m_HUD;
 
+    //[SerializeField]
+    //[Tooltip("The shotgun's animator component")]
+    private Animator shotgunAnim;
     #endregion
 
     #region Cached References
@@ -117,6 +120,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;
+        shotgunAnim = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Animator>();
     }
     #endregion
 
@@ -364,6 +368,7 @@ public class PlayerController : MonoBehaviour
         //cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
         // Call the animation for the attack
         cr_Anim.SetTrigger(attack.TriggerName);
+        shotgunAnim.SetTrigger("Rotate");
         //IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
         //StartCoroutine(toColor);
         yield return new WaitForSeconds(attack.WindUpTime);
@@ -376,6 +381,7 @@ public class PlayerController : MonoBehaviour
         //StartCoroutine(ChangeColor(p_DefaultColor, 50));
         yield return new WaitForSeconds(attack.Cooldown);
         cr_Anim.ResetTrigger(attack.TriggerName);
+        shotgunAnim.ResetTrigger("Rotate");
         attack.ResetCooldown();
     }
     #endregion
