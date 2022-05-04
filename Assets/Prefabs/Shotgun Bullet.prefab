@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 5683779467630789190}
   - component: {fileID: 7418857674450373534}
   - component: {fileID: 1057269803395848732}
+  - component: {fileID: 5210897074998095999}
   m_Layer: 0
   m_Name: Shotgun Bullet
   m_TagString: Untagged
@@ -112,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 5683779467630789189}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.624, y: 0.409, z: -0.094}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8408254881973923127}
@@ -129,12 +130,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!135 &5683779467630789190
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -269,5 +270,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Info:
-    m_Power: 0
-    m_Range: 0
+    m_Power: 10
+    m_Range: 25
+--- !u!114 &5210897074998095999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5683779467630789189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b13c2c30395f94845b95f7ea864b2376, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TimeToDestruction: 1.5

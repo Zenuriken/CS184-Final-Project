@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotgunBlast : Ability
+public class ShotgunBlast : MonoBehaviour
 {
-    private Transform camTransform;
 
-
-    public override void Use(Vector3 spawnPos) {
-        Debug.Log("BLaST");
+    private void OnCollisionEnter(Collision other) {
+        if (other.collider.CompareTag("Enemy")) {
+            Debug.Log("Hit enemy!");
+            other.collider.GetComponent<EnemyController>().DecreaseHealth(10);
+        }
     }
 }

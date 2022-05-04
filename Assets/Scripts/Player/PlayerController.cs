@@ -30,9 +30,14 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The HUD script")]
     private HUDController m_HUD;
 
-    //[SerializeField]
-    //[Tooltip("The shotgun's animator component")]
-    private Animator shotgunAnim;
+    [SerializeField]
+    [Tooltip("The number of shotgun pellets")]
+    private int numberOfPellets;
+
+    [SerializeField]
+    [Tooltip("The spread limit")]
+    private float spread;
+
     #endregion
 
     #region Cached References
@@ -83,6 +88,12 @@ public class PlayerController : MonoBehaviour
     // Key Tracker
     private int keys; 
 
+    // The animation for the shotgun
+    private Animator shotgunAnim;
+
+    // The Transform of the fire point of the shotgun
+    private Transform firePoint;
+
 
     #endregion
 
@@ -121,6 +132,7 @@ public class PlayerController : MonoBehaviour
     {
         //Cursor.lockState = CursorLockMode.Locked;
         shotgunAnim = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Animator>();
+        firePoint = GameObject.FindGameObjectWithTag("FirePoint").GetComponent<Transform>();
     }
     #endregion
 
@@ -185,13 +197,14 @@ public class PlayerController : MonoBehaviour
     // Use for code involving physics because frame rate can varying system to system.
     private void FixedUpdate()
     {   
+        camForward = m_CameraTransform.forward;
         // If the player presses forward, then align the avatar's body to face the same direction as the camera + angleOffset. 
         if (forwardPressed || backwardPressed || leftPressed || rightPressed) {
             
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y) + angleOffset,0), 0.2f);
 
             // Get the angle of the camera from the z-axis, which will later be used to calculate the direction of the player's velocity
-            camForward = m_CameraTransform.forward;
+            //camForward = m_CameraTransform.forward;
             if (camForward.x < 0) {
                 camAngleFromZAxis = Mathf.Deg2Rad * (-Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             } else {
@@ -365,6 +378,9 @@ public class PlayerController : MonoBehaviour
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
         // Set the player to the current direction of the camera
+        if (!forwardPressed && !backwardPressed) {
+            cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
+        }
         //cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
         // Call the animation for the attack
         cr_Anim.SetTrigger(attack.TriggerName);
@@ -373,9 +389,19 @@ public class PlayerController : MonoBehaviour
         //StartCoroutine(toColor);
         yield return new WaitForSeconds(attack.WindUpTime);
 
-        Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
-        GameObject go = Instantiate(attack.AbilityGO, transform.position + offset, cc_Rb.rotation);
-        go.GetComponent<Ability>().Use(transform.position + offset);
+        //Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
+
+        for (int i = 0; i < numberOfPellets; i++) {
+            // create a random left / right value
+            Vector3 spreadAmount=new Vector3(0, Random.Range(-spread,spread), Random.Range(-spread,spread));
+            // add it into the addForce
+            //clone.AddForce((firepoint.up+spreadAmount) * bulletspeed, ForceMode2D.Impulse);
+            GameObject go = Instantiate(attack.AbilityGO, firePoint.position, cc_Rb.rotation);
+            Rigidbody bullet = go.GetComponent<Rigidbody>();
+            bullet.AddForce((camForward + spreadAmount) * 20, ForceMode.Impulse);
+        }
+
+        //go.GetComponent<Ability>().Use(firePoint.position);
 
         //StopCoroutine(toColor);
         //StartCoroutine(ChangeColor(p_DefaultColor, 50));
