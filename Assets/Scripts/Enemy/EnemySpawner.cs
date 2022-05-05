@@ -37,12 +37,12 @@ public class EnemySpawner : MonoBehaviour
         while (alwaysSpawn || i < info.NumberToSpawn) {
             yield return new WaitForSeconds(info.TimeToNextSpawn);
             float xVal = m_Bounds.x / 2;
-            float yVal = m_Bounds.y / 2;
+            //float yVal = m_Bounds.y / 2;
             float zVal = m_Bounds.z / 2;
 
             Vector3 spawnPos = new Vector3(
                 Random.Range(-xVal, xVal),
-                Random.Range(-yVal, yVal),
+                0,
                 Random.Range(-zVal, zVal));
 
             spawnPos += transform.position;

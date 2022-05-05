@@ -133,6 +133,7 @@ public class PlayerController : MonoBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
         shotgunAnim = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Animator>();
         firePoint = GameObject.FindGameObjectWithTag("FirePoint").GetComponent<Transform>();
+        m_HUD = GameObject.Find("HUD").GetComponent<HUDController>();
     }
     #endregion
 
