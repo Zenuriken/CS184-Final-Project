@@ -11,8 +11,8 @@ public class Door : MonoBehaviour
             PlayerController pl = collision.gameObject.GetComponent<PlayerController>();
             if (pl.key_amount() >= 1)
             {
-                GetComponentInParent<Transform>().position += new Vector3(0, 3, 0);
                 pl.key_decrease();
+                Destroy(this.gameObject);
             }
         }
     }
