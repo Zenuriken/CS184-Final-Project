@@ -33,19 +33,34 @@ public class EnemyController : MonoBehaviour
     [Tooltip("How many points killing this enemy provides")]
     private int m_Score;
 
-
+    [SerializeField]
+    [Tooltip("The angle offset of the enemy to the player in degrees")]
+    private int angleOffset;
     #endregion
     
     #region Private Variables
     private float p_curHealth;
+
+    // Our Velocity variables
+    float velocityZ;
+    float velocityX;
+
+    // increase performance
+    int VelocityZHash;
+    int VelocityXHash;
+
     #endregion
 
     #region Cached Components
     private Rigidbody cc_Rb;
+
+    private Animator cc_Anim;
+    private Quaternion rotToPlayer;
     #endregion
 
     #region Cached References
     private Transform cr_Player;
+    private Transform lookAtTarget;
     #endregion
 
     #region Initialization
@@ -53,17 +68,59 @@ public class EnemyController : MonoBehaviour
         p_curHealth = m_MaxHealth;
 
         cc_Rb = GetComponent<Rigidbody>();
+        cc_Anim = GetComponent<Animator>();
+
+        rotToPlayer = new Quaternion();
+
+        // VelocityZHash = Animator.StringToHash("Velocity Z");
+        // VelocityXHash = Animator.StringToHash("Velocity X");
     }
 
     private void Start() {
         cr_Player = FindObjectOfType<PlayerController>().transform;
+        lookAtTarget = GameObject.Find("LookAtTarget").GetComponent<Transform>();
     }
     #endregion
 
     #region Main Updates
+    private void Update() {
+        // Set our animation variables
+
+        cc_Anim.SetBool("isMoving", true);
+        // cc_Anim.SetFloat(VelocityZHash, velocityZ);
+        // cc_Anim.SetFloat(VelocityXHash, velocityX);    
+    }
+
     private void FixedUpdate() {
         Vector3 dir = cr_Player.position - transform.position;
         dir.Normalize();
+
+        //float degsToRot = 0;
+
+        float angleToRotateEnemy = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+        
+        //Debug.Log("Angle: " + angleToRotateEnemy + "    dirX: " + dir.x + "      dirY: " + dir.y);
+        transform.Rotate(new Vector3(0, angleToRotateEnemy + angleOffset, 0), Space.Self);
+
+        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,angleToRotateEnemy,0), 0.2f);
+
+        //if (dir)
+
+        //cc_Rb.rotation = 
+
+        // float playerAngleFromZAxis = 0;
+        // if (playerForward.x < 0) {
+        //     playerAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+        // } else {
+        //     playerAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+        // }
+        // float angleToRotatePlayer = Vector3.SignedAngle(playerForward, camForward, Vector3.forward);
+        // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,0), 0.2f);
+
+
+
+
+        //transform.LookAt(cr_Player);
         cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * Time.fixedDeltaTime);
     }
     #endregion
