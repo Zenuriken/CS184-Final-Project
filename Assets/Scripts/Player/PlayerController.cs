@@ -11,6 +11,10 @@ public class PlayerController : MonoBehaviour
     private float m_Speed;
 
     [SerializeField]
+    [Tooltip("The angle offset of the player when facing forward in degrees.")]
+    private float angleOffset;
+
+    [SerializeField]
     [Tooltip("The transform of the camera following the player")]
     private Transform m_CameraTransform;
 
@@ -25,6 +29,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     [Tooltip("The HUD script")]
     private HUDController m_HUD;
+
+    [SerializeField]
+    [Tooltip("The number of shotgun pellets")]
+    private int numberOfPellets;
+
+    [SerializeField]
+    [Tooltip("The spread limit")]
+    private float spread;
 
     #endregion
 
@@ -76,6 +88,12 @@ public class PlayerController : MonoBehaviour
     // Key Tracker
     private int keys; 
 
+    // The animation for the shotgun
+    private Animator shotgunAnim;
+
+    // The Transform of the fire point of the shotgun
+    private Transform firePoint;
+
 
     #endregion
 
@@ -113,6 +131,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;
+        shotgunAnim = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Animator>();
+        firePoint = GameObject.FindGameObjectWithTag("FirePoint").GetComponent<Transform>();
     }
     #endregion
 
@@ -140,7 +160,7 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetButtonDown(attack.Button))
                 {
                     p_FrozenTimer = attack.FrozenTime;
-                    DecreaseHealth(attack.HealthCost);
+                    //DecreaseHealth(attack.HealthCost);
                     StartCoroutine(UseAttack(attack));
                     break;
                 }
@@ -160,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
         // Set current maxVelocity depending on if runPressed is true.
         float currentMaxVelocity = 0;
-        if (runPressed && forwardPressed) {
+        if (runPressed) {
             currentMaxVelocity = maximumRunVelocity;
         } else {
             currentMaxVelocity = maximumWalkVelocity;
@@ -177,27 +197,20 @@ public class PlayerController : MonoBehaviour
     // Use for code involving physics because frame rate can varying system to system.
     private void FixedUpdate()
     {   
-        // If the player presses forward, then align the avatar's body to face the same direction as the camera. 
-        if (forwardPressed || backwardPressed) {
-            Vector3 playerForward = transform.forward;
-            float playerAngleFromZAxis = 0;
-            if (playerForward.x < 0) {
-                playerAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
-            } else {
-                playerAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
-            }
-            float angleToRotatePlayer = Vector3.SignedAngle(playerForward, camForward, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,0), 0.2f);
-        }
+        camForward = m_CameraTransform.forward;
+        // If the player presses forward, then align the avatar's body to face the same direction as the camera + angleOffset. 
+        if (forwardPressed || backwardPressed || leftPressed || rightPressed) {
+            
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y) + angleOffset,0), 0.2f);
 
-        // If the player is only strafing, then do not update velocity direction of the player.
-        if ((!leftPressed && !rightPressed) || forwardPressed || backwardPressed) {
-            camForward = m_CameraTransform.forward;
+            // Get the angle of the camera from the z-axis, which will later be used to calculate the direction of the player's velocity
+            //camForward = m_CameraTransform.forward;
             if (camForward.x < 0) {
-                camAngleFromZAxis = Mathf.Deg2Rad * -Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+                camAngleFromZAxis = Mathf.Deg2Rad * (-Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             } else {
-                camAngleFromZAxis = Mathf.Deg2Rad * Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward);
+                camAngleFromZAxis = Mathf.Deg2Rad * (Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
             }
+            //Debug.Log("Cam Angle from Z Axis: " + camAngleFromZAxis);
         }
 
         // Calculate the new player velocity based on camera direction if the player isn't currently frozen
@@ -209,9 +222,6 @@ public class PlayerController : MonoBehaviour
         } else {
             p_Velocity = Vector2.zero;
         }
-
-        // Set the player's velocity
-        cc_Rb.velocity = new Vector3(p_Velocity.x * m_Speed, 0, p_Velocity.y * m_Speed);
     }
     #endregion
 
@@ -367,22 +377,38 @@ public class PlayerController : MonoBehaviour
     #region Attack Methods
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
+        Vector3 shootDir = camForward;
         // Set the player to the current direction of the camera
-        cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y, 0);
+        if (!forwardPressed && !backwardPressed) {
+            cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
+        }
+        //cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
         // Call the animation for the attack
         cr_Anim.SetTrigger(attack.TriggerName);
-        IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
-        StartCoroutine(toColor);
+        shotgunAnim.SetTrigger("Rotate");
+        //IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
+        //StartCoroutine(toColor);
         yield return new WaitForSeconds(attack.WindUpTime);
 
-        Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
-        GameObject go = Instantiate(attack.AbilityGO, transform.position + offset, cc_Rb.rotation);
-        go.GetComponent<Ability>().Use(transform.position + offset);
+        //Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
 
-        StopCoroutine(toColor);
-        StartCoroutine(ChangeColor(p_DefaultColor, 50));
+        for (int i = 0; i < numberOfPellets; i++) {
+            // create a random left / right value
+            Vector3 spreadAmount = new Vector3(Random.Range(-spread,spread), Random.Range(-spread,spread), Random.Range(-spread,spread));
+            // add it into the addForce
+            //clone.AddForce((firepoint.up+spreadAmount) * bulletspeed, ForceMode2D.Impulse);
+            GameObject go = Instantiate(attack.AbilityGO, firePoint.position, cc_Rb.rotation);
+            Rigidbody bullet = go.GetComponent<Rigidbody>();
+            bullet.AddForce((shootDir + spreadAmount) * 20, ForceMode.Impulse);
+        }
+
+        //go.GetComponent<Ability>().Use(firePoint.position);
+
+        //StopCoroutine(toColor);
+        //StartCoroutine(ChangeColor(p_DefaultColor, 50));
         yield return new WaitForSeconds(attack.Cooldown);
-
+        cr_Anim.ResetTrigger(attack.TriggerName);
+        shotgunAnim.ResetTrigger("Rotate");
         attack.ResetCooldown();
     }
     #endregion
