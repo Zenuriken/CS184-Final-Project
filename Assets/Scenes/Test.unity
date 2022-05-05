@@ -788,7 +788,7 @@ PrefabInstance:
     - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
         type: 3}
       propertyPath: numberOfPellets
-      value: 20
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4078481234447869299, guid: 4d99e31ea4c97344f813afd436fe3b3a,
         type: 3}

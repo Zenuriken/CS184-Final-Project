@@ -377,6 +377,7 @@ public class PlayerController : MonoBehaviour
     #region Attack Methods
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
+        Vector3 shootDir = camForward;
         // Set the player to the current direction of the camera
         if (!forwardPressed && !backwardPressed) {
             cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
@@ -393,12 +394,12 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < numberOfPellets; i++) {
             // create a random left / right value
-            Vector3 spreadAmount=new Vector3(0, Random.Range(-spread,spread), Random.Range(-spread,spread));
+            Vector3 spreadAmount = new Vector3(Random.Range(-spread,spread), Random.Range(-spread,spread), Random.Range(-spread,spread));
             // add it into the addForce
             //clone.AddForce((firepoint.up+spreadAmount) * bulletspeed, ForceMode2D.Impulse);
             GameObject go = Instantiate(attack.AbilityGO, firePoint.position, cc_Rb.rotation);
             Rigidbody bullet = go.GetComponent<Rigidbody>();
-            bullet.AddForce((camForward + spreadAmount) * 20, ForceMode.Impulse);
+            bullet.AddForce((shootDir + spreadAmount) * 20, ForceMode.Impulse);
         }
 
         //go.GetComponent<Ability>().Use(firePoint.position);
