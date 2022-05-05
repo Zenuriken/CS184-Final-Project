@@ -90,5 +90,9 @@ public class EnemyController : MonoBehaviour
         }
         
     }
+
+    public float GetHealth() {
+        return p_curHealth;
+    }
     #endregion
 }
