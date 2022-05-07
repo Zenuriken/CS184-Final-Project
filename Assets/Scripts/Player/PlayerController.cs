@@ -106,6 +106,10 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region particles
+    public ParticleSystem flash;
+    #endregion
+
     #region Initialization
     private void Awake()
     {
@@ -114,6 +118,7 @@ public class PlayerController : MonoBehaviour
         cr_Anim = GetComponent<Animator>();
         cr_Renderer = GetComponentInChildren<Renderer>();
         p_DefaultColor = cr_Renderer.material.color;
+        flash.Stop();
 
         VelocityZHash = Animator.StringToHash("Velocity Z");
         VelocityXHash = Animator.StringToHash("Velocity X");
@@ -393,6 +398,7 @@ public class PlayerController : MonoBehaviour
     #region Attack Methods
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
+
         if (attack.AttackName == "Shotgun" && !isPunching) {
             isShooting = true;
             Vector3 shootDir = camForward;
@@ -405,6 +411,7 @@ public class PlayerController : MonoBehaviour
             cr_Anim.SetTrigger(attack.TriggerName);
             shotgunAnim.SetTrigger("Rotate");
             yield return new WaitForSeconds(attack.WindUpTime);
+            flash.Play();
 
             for (int i = 0; i < numberOfPellets; i++) {
                 // create a random left / right value
@@ -416,6 +423,7 @@ public class PlayerController : MonoBehaviour
             }
 
             yield return new WaitForSeconds(attack.Cooldown);
+            flash.Stop();
             cr_Anim.ResetTrigger(attack.TriggerName);
             shotgunAnim.ResetTrigger("Rotate");
             attack.ResetCooldown();
@@ -452,6 +460,7 @@ public class PlayerController : MonoBehaviour
             isPunching = false;
         }
         
+
 
     }
     #endregion
