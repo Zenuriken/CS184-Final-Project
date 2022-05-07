@@ -6,8 +6,8 @@ public class EnemySpawner : MonoBehaviour
 {
     #region Editor Variables
     [SerializeField]
-    [Tooltip("The bounds of the spawner")]
-    private Vector3 m_Bounds;
+    [Tooltip("The spawn radius")]
+    private float spawnRadius;
 
     [SerializeField]
     [Tooltip("A list of all enemies that can be spawned and their information")]
@@ -36,21 +36,18 @@ public class EnemySpawner : MonoBehaviour
         }
         while (alwaysSpawn || i < info.NumberToSpawn) {
             yield return new WaitForSeconds(info.TimeToNextSpawn);
-            float xVal = m_Bounds.x / 2;
-            //float yVal = m_Bounds.y / 2;
-            float zVal = m_Bounds.z / 2;
-
-            Vector3 spawnPos = new Vector3(
-                Random.Range(-xVal, xVal),
-                0,
-                Random.Range(-zVal, zVal));
-
+            Vector3 spawnPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius));
             spawnPos += transform.position;
             Instantiate(info.EnemyGO, spawnPos, Quaternion.identity);
             if (!alwaysSpawn) {
                 i++;
             }
         }
+    }
+
+    private void OnDrawGizmosSelected() {   
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(transform.position, new Vector3(spawnRadius * 2, 5, spawnRadius * 2));
     }
     #endregion
 }

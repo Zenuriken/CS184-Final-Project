@@ -175,7 +175,7 @@ public class EnemyController : MonoBehaviour
         Vector3 shootDir = new Vector3(cr_Player.position.x - firePoint.position.x, 0, cr_Player.position.z - firePoint.position.z);
         rifleAnimator.SetBool("Rotate", true);
         cc_Anim.SetBool("isShooting", true);
-        Debug.Log("Shooting");
+        //Debug.Log("Shooting");
         for (int i = 0; i < numBullets; i++) {
             GameObject go = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
             Rigidbody bullet = go.GetComponent<Rigidbody>();

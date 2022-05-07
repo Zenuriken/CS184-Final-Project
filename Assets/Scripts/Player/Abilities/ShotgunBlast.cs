@@ -10,7 +10,7 @@ public class ShotgunBlast : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) {
         if (other.collider.CompareTag("Enemy")) {
-            Debug.Log("Hit enemy!");
+            //Debug.Log("Hit enemy!");
             EnemyController enemyScript = other.collider.GetComponent<EnemyController>();
             if (enemyScript.GetHealth() > 0) {
                 enemyScript.DecreaseHealth(dmg);
