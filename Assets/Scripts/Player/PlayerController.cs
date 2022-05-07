@@ -97,6 +97,10 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region particles
+    public ParticleSystem flash;
+    #endregion
+
     #region Initialization
     private void Awake()
     {
@@ -105,6 +109,7 @@ public class PlayerController : MonoBehaviour
         cr_Anim = GetComponent<Animator>();
         cr_Renderer = GetComponentInChildren<Renderer>();
         p_DefaultColor = cr_Renderer.material.color;
+        flash.Stop();
 
         VelocityZHash = Animator.StringToHash("Velocity Z");
         VelocityXHash = Animator.StringToHash("Velocity X");
@@ -391,7 +396,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(attack.WindUpTime);
 
         //Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
-
+        flash.Play();
         for (int i = 0; i < numberOfPellets; i++) {
             // create a random left / right value
             Vector3 spreadAmount = new Vector3(Random.Range(-spread,spread), Random.Range(-spread,spread), Random.Range(-spread,spread));
@@ -401,12 +406,13 @@ public class PlayerController : MonoBehaviour
             Rigidbody bullet = go.GetComponent<Rigidbody>();
             bullet.AddForce((shootDir + spreadAmount) * 20, ForceMode.Impulse);
         }
-
+        
         //go.GetComponent<Ability>().Use(firePoint.position);
 
         //StopCoroutine(toColor);
         //StartCoroutine(ChangeColor(p_DefaultColor, 50));
         yield return new WaitForSeconds(attack.Cooldown);
+        flash.Stop();
         cr_Anim.ResetTrigger(attack.TriggerName);
         shotgunAnim.ResetTrigger("Rotate");
         attack.ResetCooldown();
