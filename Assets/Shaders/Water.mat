@@ -59,11 +59,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainNormal:
-        m_Texture: {fileID: 2800000, guid: c21511cdc86c86847bdae740c8b071da, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6c6964cefd3ad494292d954a7791d7cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: 0592cc91768de4b739dde39a88294e00, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -79,7 +83,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondaryNormal:
-        m_Texture: {fileID: 2800000, guid: 9f04018992f98ef4997b6883c48cc0f8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0592cc91768de4b739dde39a88294e00, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondaryTexture:
+        m_Texture: {fileID: 2800000, guid: 0592cc91768de4b739dde39a88294e00, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -107,15 +115,17 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Depth: -0.38
+    - _Depth: -0.27
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _Displacement: 0.65
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _NormalStrength: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -125,15 +135,16 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Strength: 0.72
+    - _Strength: 1.14
     - _Surface: 0
+    - _WaterSmoothness: 0.431
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DeepWaterColor: {r: 0.07289071, g: 0.184842, b: 0.3962264, a: 0.682353}
+    - _DeepWaterColor: {r: 0, g: 0.49205062, b: 0.754717, a: 0.84313726}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShallowWaterColor: {r: 0.3971609, g: 0.6330104, b: 0.8018868, a: 0.682353}
+    - _ShallowWaterColor: {r: 0.25943398, g: 0.77783006, b: 1, a: 0.59607846}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
