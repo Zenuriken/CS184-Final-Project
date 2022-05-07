@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         // If the raycast hits an object
         if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 2.0f)) {
-            if (hit.collider.gameObject.tag != "Player") {
+            if (hit.collider.gameObject.tag != "Player" && hit.collider.gameObject.tag != "Enemy") {
                 Obstruction = hit.transform;
                 ObstructionMesh = Obstruction.gameObject.GetComponent<MeshRenderer>();
 

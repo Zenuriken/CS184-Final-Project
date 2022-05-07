@@ -73,6 +73,10 @@ public class EnemyController : MonoBehaviour
     [Tooltip("The spawn offset for the healthPill")]
     private Vector3 pillSpawnOffset;
 
+    [SerializeField]
+    [Tooltip("The duration enemy is stunned for after being punched")]
+    private float stunnedDur;
+
     #endregion
     
     #region Private Variables
@@ -82,11 +86,14 @@ public class EnemyController : MonoBehaviour
     private float distToPlayer;
     private float burstTimer;
     private Animator rifleAnimator;
+    private Punch punchScript;
+    private bool isStunned;
     #endregion
 
     #region Cached Components
     private Rigidbody cc_Rb;
     private Animator cc_Anim;
+    private Collider col;
     #endregion
 
     #region Cached References
@@ -102,10 +109,12 @@ public class EnemyController : MonoBehaviour
         cc_Rb = GetComponent<Rigidbody>();
         cc_Anim = GetComponent<Animator>();
         rifleAnimator = rifle.GetComponent<Animator>();
+        col = GetComponent<Collider>();
     }
 
     private void Start() {
         cr_Player = FindObjectOfType<PlayerController>().transform;
+        punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
     }
     #endregion
 
@@ -115,6 +124,7 @@ public class EnemyController : MonoBehaviour
         if (burstTimer > 0) {
             burstTimer -= Time.deltaTime;
         }
+
     }
 
     private void FixedUpdate() {
@@ -137,25 +147,29 @@ public class EnemyController : MonoBehaviour
         }
 
         // If the Enemy is alerted of the Player's presence, then it will attack/pursue the player depending on their distance
-        if (isAlerted && seesPlayer && distToPlayer <= shootingRange && burstTimer <= 0) {
+        if (isAlerted && seesPlayer && distToPlayer <= shootingRange && burstTimer <= 0 && !isStunned) {
             float angleToRotateEnemy = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
             transform.Rotate(new Vector3(0, angleToRotateEnemy + angleOffset, 0), Space.Self);
             cc_Anim.SetBool("isMoving", false);
             StartCoroutine("Shoot");
 
         // Move towards player if we cannot see them or they are too far
-        } else if (isAlerted && (!seesPlayer || distToPlayer > shootingRange)) {
+        } else if (isAlerted && (!seesPlayer || distToPlayer > shootingRange) && !isStunned) {
             float angleToRotateEnemy = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
             transform.Rotate(new Vector3(0, angleToRotateEnemy + angleOffset, 0), Space.Self);
             cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * Time.fixedDeltaTime);
             cc_Anim.SetBool("isMoving", true);
 
         // Default to Idle position
-        } else if (isAlerted) {
+        } else if (isAlerted && !isStunned) {
             float angleToRotateEnemy = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
             transform.Rotate(new Vector3(0, angleToRotateEnemy + angleOffset, 0), Space.Self);
             cc_Anim.SetBool("isMoving", false);
             //cc_Anim.SetBool("isShooting", false);
+        } else if (isStunned) {
+            Vector3 stunnedDir = transform.position - cr_Player.position;
+            stunnedDir.Normalize(); 
+            StartCoroutine("Stunned", stunnedDir);
         }
     }
     #endregion
@@ -197,6 +211,7 @@ public class EnemyController : MonoBehaviour
                 Instantiate(m_HealthPill, transform.position + pillSpawnOffset, Quaternion.identity);
             }
             Instantiate(m_DeathExplosion, transform.position, Quaternion.identity);
+            punchScript.RemoveEnemy(col);
             Destroy(gameObject);
         }
         
@@ -206,4 +221,22 @@ public class EnemyController : MonoBehaviour
         return p_curHealth;
     }
     #endregion
+
+
+    IEnumerator Stunned(Vector3 dir) {
+        cc_Anim.SetBool("isShooting", false);
+        cc_Anim.SetBool("isMoving", false);
+        cc_Anim.SetBool("isStunned", true);
+
+
+        cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
+
+        yield return new WaitForSeconds(stunnedDur);
+        cc_Anim.SetBool("isStunned", false);
+        isStunned = false;
+    }
+
+    public void SetIsStunned() {
+        isStunned = true;
+    }
 }

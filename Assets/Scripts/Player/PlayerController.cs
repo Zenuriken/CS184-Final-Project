@@ -38,6 +38,10 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The spread limit")]
     private float spread;
 
+    [SerializeField]
+    [Tooltip("The amount of force for a punch.")]
+    private float punchForce;
+
     #endregion
 
     #region Cached References
@@ -89,11 +93,16 @@ public class PlayerController : MonoBehaviour
     private int keys; 
 
     // The animation for the shotgun
+    private GameObject shotgun;
     private Animator shotgunAnim;
 
     // The Transform of the fire point of the shotgun
     private Transform firePoint;
 
+    private bool isPunching;
+    private bool isShooting;
+
+    private Punch punchScript;
 
     #endregion
 
@@ -131,9 +140,11 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;
-        shotgunAnim = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Animator>();
+        shotgun = GameObject.FindGameObjectWithTag("Weapon");
+        shotgunAnim = shotgun.GetComponent<Animator>();
         firePoint = GameObject.FindGameObjectWithTag("FirePoint").GetComponent<Transform>();
         m_HUD = GameObject.Find("HUD").GetComponent<HUDController>();
+        punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
     }
     #endregion
 
@@ -202,7 +213,11 @@ public class PlayerController : MonoBehaviour
         // If the player presses forward, then align the avatar's body to face the same direction as the camera + angleOffset. 
         if (forwardPressed || backwardPressed || leftPressed || rightPressed) {
             
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y) + angleOffset,0), 0.2f);
+            if (isPunching) {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y),0), 0.2f);
+            } else {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0,(Camera.main.transform.eulerAngles.y) + angleOffset,0), 0.2f);
+            }
 
             // Get the angle of the camera from the z-axis, which will later be used to calculate the direction of the player's velocity
             //camForward = m_CameraTransform.forward;
@@ -378,39 +393,66 @@ public class PlayerController : MonoBehaviour
     #region Attack Methods
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
-        Vector3 shootDir = camForward;
-        // Set the player to the current direction of the camera
-        if (!forwardPressed && !backwardPressed) {
-            cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
+        if (attack.AttackName == "Shotgun" && !isPunching) {
+            isShooting = true;
+            Vector3 shootDir = camForward;
+            // Set the player to the current direction of the camera
+            if (!forwardPressed && !backwardPressed) {
+                cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
+            }
+
+            // Call the animation for the attack
+            cr_Anim.SetTrigger(attack.TriggerName);
+            shotgunAnim.SetTrigger("Rotate");
+            yield return new WaitForSeconds(attack.WindUpTime);
+
+            for (int i = 0; i < numberOfPellets; i++) {
+                // create a random left / right value
+                Vector3 spreadAmount = new Vector3(Random.Range(-spread,spread), Random.Range(-spread,spread), Random.Range(-spread,spread));
+                // add it into the addForce
+                GameObject go = Instantiate(attack.AbilityGO, firePoint.position, cc_Rb.rotation);
+                Rigidbody bullet = go.GetComponent<Rigidbody>();
+                bullet.AddForce((shootDir + spreadAmount) * 20, ForceMode.Impulse);
+            }
+
+            yield return new WaitForSeconds(attack.Cooldown);
+            cr_Anim.ResetTrigger(attack.TriggerName);
+            shotgunAnim.ResetTrigger("Rotate");
+            attack.ResetCooldown();
+            isShooting = false; 
+
+        } else if (attack.AttackName == "Punch" && !isShooting) {
+            Vector3 punchDir = new Vector3(camForward.x, 0, camForward.z);
+            isPunching = true;
+            // Set the player to the current direction of the camera
+            if (!forwardPressed && !backwardPressed) {
+                cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y, 0);
+            }
+            shotgun.SetActive(false);
+
+            // Call the animation for the attack
+            cr_Anim.SetTrigger(attack.TriggerName);
+            
+            yield return new WaitForSeconds(attack.WindUpTime);
+            
+            foreach (Collider enemy in punchScript.GetEnemyList()) {
+                Rigidbody rb = enemy.gameObject.GetComponent<Rigidbody>();
+                // rb.velocity = Vector3.zero;
+                // rb.AddForce(punchDir * punchForce, ForceMode.Impulse);
+                EnemyController enemyScript = enemy.gameObject.GetComponent<EnemyController>();
+                enemyScript.DecreaseHealth(10);
+                enemyScript.SetIsStunned();
+            }
+            //Debug.Log(punchScript.GetEnemyList().Count);
+
+            yield return new WaitForSeconds(attack.Cooldown);
+            cr_Anim.ResetTrigger(attack.TriggerName);
+            attack.ResetCooldown();
+            shotgun.SetActive(true);
+            isPunching = false;
         }
-        //cc_Rb.rotation = Quaternion.Euler(0, m_CameraTransform.eulerAngles.y + angleOffset, 0);
-        // Call the animation for the attack
-        cr_Anim.SetTrigger(attack.TriggerName);
-        shotgunAnim.SetTrigger("Rotate");
-        //IEnumerator toColor = ChangeColor(attack.AbilityColor, 10);
-        //StartCoroutine(toColor);
-        yield return new WaitForSeconds(attack.WindUpTime);
+        
 
-        //Vector3 offset = transform.forward * attack.Offset.z + transform.right * attack.Offset.x + transform.up * attack.Offset.y;
-
-        for (int i = 0; i < numberOfPellets; i++) {
-            // create a random left / right value
-            Vector3 spreadAmount = new Vector3(Random.Range(-spread,spread), Random.Range(-spread,spread), Random.Range(-spread,spread));
-            // add it into the addForce
-            //clone.AddForce((firepoint.up+spreadAmount) * bulletspeed, ForceMode2D.Impulse);
-            GameObject go = Instantiate(attack.AbilityGO, firePoint.position, cc_Rb.rotation);
-            Rigidbody bullet = go.GetComponent<Rigidbody>();
-            bullet.AddForce((shootDir + spreadAmount) * 20, ForceMode.Impulse);
-        }
-
-        //go.GetComponent<Ability>().Use(firePoint.position);
-
-        //StopCoroutine(toColor);
-        //StartCoroutine(ChangeColor(p_DefaultColor, 50));
-        yield return new WaitForSeconds(attack.Cooldown);
-        cr_Anim.ResetTrigger(attack.TriggerName);
-        shotgunAnim.ResetTrigger("Rotate");
-        attack.ResetCooldown();
     }
     #endregion
 
@@ -424,6 +466,10 @@ public class PlayerController : MonoBehaviour
             cr_Renderer.material.color = curColor;
             yield return null;
         }
+    }
+
+    public Vector3 GetCamForward() {
+        return camForward;
     }
     #endregion
 

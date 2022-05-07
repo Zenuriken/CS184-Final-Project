@@ -31,6 +31,81 @@ Transform:
   m_Father: {fileID: 4078481233415166172}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &237462869
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237462870}
+  - component: {fileID: 237462872}
+  - component: {fileID: 237462871}
+  - component: {fileID: 237462873}
+  m_Layer: 0
+  m_Name: Punch Range
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &237462870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237462869}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.266, z: 0.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4078481234447869311}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &237462872
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237462869}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &237462871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237462869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab29f9f9d85f434db6d816c3c1e819c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &237462873
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237462869}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &4078481232609827473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,6 +2521,7 @@ Transform:
   - {fileID: 4078481232997881367}
   - {fileID: 4078481233508068749}
   - {fileID: 4078481234028527650}
+  - {fileID: 237462870}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2483,7 +2559,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 1
 --- !u!136 &4078481234447869298
 CapsuleCollider:
@@ -2526,10 +2602,21 @@ MonoBehaviour:
     m_Cooldown: 1
     m_HealthCost: 0
     m_Color: {r: 1, g: 1, b: 1, a: 0}
+  - m_name: Punch
+    m_Button: Fire2
+    m_TriggerName: isPunching
+    m_AbilityGO: {fileID: 0}
+    m_offset: {x: 0.4, y: 1.1, z: 1}
+    m_WindUpTime: 0.75
+    m_FrozenTime: 0.75
+    m_Cooldown: 1
+    m_HealthCost: 0
+    m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_MaxHealth: 100
   m_HUD: {fileID: 0}
   numberOfPellets: 30
   spread: 0.1
+  punchForce: 1000
   acceleration: 2
   deceleration: 4
   maximumWalkVelocity: 0.5
