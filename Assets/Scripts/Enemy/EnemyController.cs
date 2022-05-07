@@ -65,6 +65,14 @@ public class EnemyController : MonoBehaviour
     [Tooltip("The fire point of the enemy gun")]
     private Transform firePoint;
 
+    [SerializeField]
+    [Tooltip("The rifle gameObject")]
+    private GameObject rifle;
+
+    [SerializeField]
+    [Tooltip("The spawn offset for the healthPill")]
+    private Vector3 pillSpawnOffset;
+
     #endregion
     
     #region Private Variables
@@ -73,6 +81,7 @@ public class EnemyController : MonoBehaviour
     private bool seesPlayer;
     private float distToPlayer;
     private float burstTimer;
+    private Animator rifleAnimator;
     #endregion
 
     #region Cached Components
@@ -92,7 +101,7 @@ public class EnemyController : MonoBehaviour
         burstTimer = burstDelay;
         cc_Rb = GetComponent<Rigidbody>();
         cc_Anim = GetComponent<Animator>();
-
+        rifleAnimator = rifle.GetComponent<Animator>();
     }
 
     private void Start() {
@@ -117,11 +126,13 @@ public class EnemyController : MonoBehaviour
         // If Player is in Enemy's line of sight, then the enemy will pursue the player.
         if (Physics.Raycast(transform.position, dir, out hit, detectionRange)) {
             if (hit.transform.tag == "Player") {
+                //Debug.Log("Hit Player");
                 distToPlayer = (hit.point - transform.position).magnitude;
                 isAlerted = true;
                 seesPlayer = true;
             } else {
                 seesPlayer = false;
+                //Debug.Log("Hit wall");
             }
         }
 
@@ -162,8 +173,8 @@ public class EnemyController : MonoBehaviour
     IEnumerator Shoot() {
         burstTimer = burstDelay;
         Vector3 shootDir = new Vector3(cr_Player.position.x - firePoint.position.x, 0, cr_Player.position.z - firePoint.position.z);
-
-        //cc_Anim.SetBool("isShooting", true);
+        rifleAnimator.SetBool("Rotate", true);
+        cc_Anim.SetBool("isShooting", true);
         Debug.Log("Shooting");
         for (int i = 0; i < numBullets; i++) {
             GameObject go = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
@@ -172,7 +183,8 @@ public class EnemyController : MonoBehaviour
             yield return new WaitForSeconds(bulletDelay);
         }
 
-        //cc_Anim.SetBool("isShooting", false);
+        cc_Anim.SetBool("isShooting", false);
+        rifleAnimator.SetBool("Rotate", false);
     }
     #endregion
 
@@ -182,7 +194,7 @@ public class EnemyController : MonoBehaviour
         if (p_curHealth <= 0) {
             //ScoreManager.singleton.IncreaseScore(m_Score);
             if (Random.value < m_HealthPillDropRate) {
-                Instantiate(m_HealthPill, transform.position, Quaternion.identity);
+                Instantiate(m_HealthPill, transform.position + pillSpawnOffset, Quaternion.identity);
             }
             Instantiate(m_DeathExplosion, transform.position, Quaternion.identity);
             Destroy(gameObject);

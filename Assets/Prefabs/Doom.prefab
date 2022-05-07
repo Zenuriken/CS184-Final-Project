@@ -362,6 +362,8 @@ MonoBehaviour:
   Target: {fileID: 4078481234028527650}
   Player: {fileID: 4078481234447869311}
   Obstruction: {fileID: 4078481234447869311}
+  ObstructionMesh: {fileID: 0}
+  LastObstructionMesh: {fileID: 0}
 --- !u!1 &4078481232927110476
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,7 +2511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbd34922904ae9469093b40923c1d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 10
+  m_Speed: 8
   angleOffset: 70
   m_CameraTransform: {fileID: 4078481232914175997}
   m_Attacks:
@@ -2519,14 +2521,14 @@ MonoBehaviour:
     m_AbilityGO: {fileID: 5683779467630789189, guid: 6eef301578036204bb7c8a6b4786dd21,
       type: 3}
     m_offset: {x: 0.4, y: 1.1, z: 1}
-    m_WindUpTime: 0.75
+    m_WindUpTime: 0.1
     m_FrozenTime: 0.75
     m_Cooldown: 1
     m_HealthCost: 0
     m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_MaxHealth: 100
   m_HUD: {fileID: 0}
-  numberOfPellets: 20
+  numberOfPellets: 30
   spread: 0.1
   acceleration: 2
   deceleration: 4

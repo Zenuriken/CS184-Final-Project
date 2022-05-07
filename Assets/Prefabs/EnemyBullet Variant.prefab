@@ -77,6 +77,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBullet Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5683779467630789189, guid: 6eef301578036204bb7c8a6b4786dd21,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683779467630789189, guid: 6eef301578036204bb7c8a6b4786dd21,
+        type: 3}
+      propertyPath: m_TagString
+      value: EnemyBullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683779467630789190, guid: 6eef301578036204bb7c8a6b4786dd21,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7418857674450373534, guid: 6eef301578036204bb7c8a6b4786dd21,
         type: 3}
       propertyPath: m_Parameters.colorGradient.atime1

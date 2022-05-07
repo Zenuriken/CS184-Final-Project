@@ -13,5 +13,9 @@ public class EnemyShoot : MonoBehaviour
             PlayerController playerScript = other.collider.GetComponent<PlayerController>();
             playerScript.DecreaseHealth(dmg);
         }
+
+        if (!other.collider.CompareTag("EnemyBullet")) {
+            Destroy(this);
+        }
     }
 }

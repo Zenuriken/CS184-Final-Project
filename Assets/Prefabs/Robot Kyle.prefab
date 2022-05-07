@@ -455,14 +455,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MaxHealth: 100
   m_speed: 3
-  m_Damage: 10
+  m_Damage: 0.1
   m_DeathExplosion: {fileID: 1751476858793735223, guid: 5f7cbf55f3468d34f8f469877a079fbb,
     type: 3}
   m_HealthPillDropRate: 0.5
   m_HealthPill: {fileID: 7461744473706969560, guid: b380ae31c0c84854f98a562fe310de52,
     type: 3}
   m_Score: 10
-  angleOffset: 40
+  angleOffset: 50
   detectionRange: 50
   shootingRange: 20
   numBullets: 3
@@ -471,6 +471,8 @@ MonoBehaviour:
   bulletDelay: 0.5
   burstDelay: 5
   firePoint: {fileID: 1803503638}
+  rifle: {fileID: 7351100232889685827}
+  pillSpawnOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &1761025385277303319
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,11 +1922,25 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b866354bf8f1353499b43bf17f5fb024, type: 2}
+    - target: {fileID: 9500000, guid: 9a21925963ad72641b17d3da3e0c173f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 07c1c91a05c458043b1f5ab11385142f, type: 2}
+    - target: {fileID: 9500000, guid: 9a21925963ad72641b17d3da3e0c173f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a21925963ad72641b17d3da3e0c173f, type: 3}
 --- !u!4 &7351100232889387875 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400004, guid: 9a21925963ad72641b17d3da3e0c173f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7351100232889782759}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7351100232889685827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 9a21925963ad72641b17d3da3e0c173f,
     type: 3}
   m_PrefabInstance: {fileID: 7351100232889782759}
   m_PrefabAsset: {fileID: 0}
