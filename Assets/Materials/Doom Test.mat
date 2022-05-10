@@ -137,7 +137,7 @@ Material:
     m_Colors:
     - Toon_Ramp_Tint: {r: 0.31132078, g: 0.2305536, b: 0.2305536, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.11854753, g: 0.2264151, b: 0.15386756, a: 1}
+    - _Color: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _ToonRampTinting: {r: 0.084905684, g: 0.036445364, b: 0.036445364, a: 0}

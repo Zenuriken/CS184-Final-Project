@@ -76,7 +76,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     [Tooltip("The duration enemy is stunned for after being punched")]
     private float stunnedDur;
-
     #endregion
     
     #region Private Variables
@@ -88,6 +87,8 @@ public class EnemyController : MonoBehaviour
     private Animator rifleAnimator;
     private Punch punchScript;
     private bool isStunned;
+    private Vector3 stunDirection;
+    private int layersToCheck;
     #endregion
 
     #region Cached Components
@@ -98,6 +99,7 @@ public class EnemyController : MonoBehaviour
 
     #region Cached References
     private Transform cr_Player;
+    private PlayerController playerScript;
     #endregion
 
     #region Initialization
@@ -113,8 +115,10 @@ public class EnemyController : MonoBehaviour
     }
 
     private void Start() {
-        cr_Player = FindObjectOfType<PlayerController>().transform;
+        playerScript = FindObjectOfType<PlayerController>();
+        cr_Player = playerScript.transform;
         punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
+        layersToCheck = LayerMask.GetMask("Player", "Wall");
     }
     #endregion
 
@@ -128,21 +132,22 @@ public class EnemyController : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        Vector3 dir = cr_Player.position - transform.position;
+        Vector3 dir = new Vector3(cr_Player.position.x - transform.position.x, 0, cr_Player.position.z - transform.position.z);
         dir.Normalize();
         
         RaycastHit hit;
-        
+        Vector3 rayCastOrigin = transform.position + new Vector3(0, 1, 0);
+
         // If Player is in Enemy's line of sight, then the enemy will pursue the player.
-        if (Physics.Raycast(transform.position, dir, out hit, detectionRange)) {
+        if (Physics.Raycast(rayCastOrigin, dir, out hit, detectionRange, layersToCheck)) {
+            //Debug.DrawRay(rayCastOrigin, dir * detectionRange, Color.green, 0.01f);
             if (hit.transform.tag == "Player") {
-                //Debug.Log("Hit Player");
                 distToPlayer = (hit.point - transform.position).magnitude;
                 isAlerted = true;
                 seesPlayer = true;
             } else {
                 seesPlayer = false;
-                //Debug.Log("Hit wall");
+                //Debug.Log("Hit: " + hit.transform.gameObject.name);
             }
         }
 
@@ -167,9 +172,7 @@ public class EnemyController : MonoBehaviour
             cc_Anim.SetBool("isMoving", false);
             //cc_Anim.SetBool("isShooting", false);
         } else if (isStunned) {
-            Vector3 stunnedDir = transform.position - cr_Player.position;
-            stunnedDir.Normalize(); 
-            StartCoroutine("Stunned", stunnedDir);
+            StartCoroutine("Stunned");
         }
     }
     #endregion
@@ -206,13 +209,12 @@ public class EnemyController : MonoBehaviour
     public void DecreaseHealth(float amount) {
         p_curHealth -= amount;
         if (p_curHealth <= 0) {
-            //ScoreManager.singleton.IncreaseScore(m_Score);
+            ScoreManager.singleton.IncreaseScore(m_Score);
             if (Random.value < m_HealthPillDropRate) {
                 Instantiate(m_HealthPill, transform.position + pillSpawnOffset, Quaternion.identity);
             }
             Instantiate(m_DeathExplosion, transform.position, Quaternion.identity);
-            punchScript.RemoveEnemy(col);
-            Destroy(gameObject);
+            Invoke("DestroyEnemy", 0.1f);
         }
         
     }
@@ -220,23 +222,34 @@ public class EnemyController : MonoBehaviour
     public float GetHealth() {
         return p_curHealth;
     }
+
+    private void DestroyEnemy() {
+        punchScript.RemoveEnemy(col);
+        Destroy(this.gameObject);
+    }
     #endregion
 
 
-    IEnumerator Stunned(Vector3 dir) {
+    IEnumerator Stunned() {
         cc_Anim.SetBool("isShooting", false);
         cc_Anim.SetBool("isMoving", false);
         cc_Anim.SetBool("isStunned", true);
 
-
-        cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
+        cc_Rb.velocity = new Vector3(stunDirection.x * m_speed * 8, 0, stunDirection.z * m_speed * 8);
+        //cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
 
         yield return new WaitForSeconds(stunnedDur);
         cc_Anim.SetBool("isStunned", false);
         isStunned = false;
     }
 
-    public void SetIsStunned() {
+    public void SetToStunned(Vector3 dir) {
+        stunDirection = dir;
         isStunned = true;
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }

@@ -118,7 +118,7 @@ Material:
     - _Depth: -0.27
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Displacement: 0.65
+    - _Displacement: 0.01
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -137,7 +137,7 @@ Material:
     - _SrcBlend: 1
     - _Strength: 1.14
     - _Surface: 0
-    - _WaterSmoothness: 0.431
+    - _WaterSmoothness: 0.344
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

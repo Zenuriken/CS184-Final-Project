@@ -8,13 +8,14 @@ public class EnemyShoot : MonoBehaviour
     [Tooltip("Amount of damage per bullet")]
     private float dmg;
 
-    private void OnCollisionEnter(Collision other) {
-        if (other.collider.CompareTag("Player")) {
-            PlayerController playerScript = other.collider.GetComponent<PlayerController>();
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player")) {
+            PlayerController playerScript = other.GetComponent<PlayerController>();
             playerScript.DecreaseHealth(dmg);
+            //Debug.Log("hit player");
         }
 
-        if (!other.collider.CompareTag("EnemyBullet")) {
+        if (!other.CompareTag("EnemyBullet")) {
             Destroy(this);
         }
     }

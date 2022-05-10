@@ -106,6 +106,10 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region particles
+    public ParticleSystem flash;
+    #endregion
+
     #region Initialization
     private void Awake()
     {
@@ -114,6 +118,7 @@ public class PlayerController : MonoBehaviour
         cr_Anim = GetComponent<Animator>();
         cr_Renderer = GetComponentInChildren<Renderer>();
         p_DefaultColor = cr_Renderer.material.color;
+        flash.Stop();
 
         VelocityZHash = Animator.StringToHash("Velocity Z");
         VelocityXHash = Animator.StringToHash("Velocity X");
@@ -145,6 +150,7 @@ public class PlayerController : MonoBehaviour
         firePoint = GameObject.FindGameObjectWithTag("FirePoint").GetComponent<Transform>();
         m_HUD = GameObject.Find("HUD").GetComponent<HUDController>();
         punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
+        flash.Stop();
     }
     #endregion
 
@@ -220,20 +226,13 @@ public class PlayerController : MonoBehaviour
             }
 
             // Get the angle of the camera from the z-axis, which will later be used to calculate the direction of the player's velocity
-            //camForward = m_CameraTransform.forward;
-            if (camForward.x < 0) {
-                camAngleFromZAxis = Mathf.Deg2Rad * (-Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
-            } else {
-                camAngleFromZAxis = Mathf.Deg2Rad * (Vector3.SignedAngle(camForward, Vector3.forward, Vector3.forward));
-            }
-            //Debug.Log("Cam Angle from Z Axis: " + camAngleFromZAxis);
+            camAngleFromZAxis = Mathf.Deg2Rad * (Vector3.SignedAngle(Vector3.forward, camForward, Vector3.up));
         }
 
         // Calculate the new player velocity based on camera direction if the player isn't currently frozen
         if (p_FrozenTimer == 0) {
             p_Velocity = new Vector2(velocityX * Mathf.Cos(camAngleFromZAxis) + velocityZ * Mathf.Sin(camAngleFromZAxis),
                              velocityX * -Mathf.Sin(camAngleFromZAxis) + velocityZ * Mathf.Cos(camAngleFromZAxis));
-            Vector2 p_Velocity_norm = p_Velocity.normalized;
             cc_Rb.velocity = new Vector3(p_Velocity.x * m_Speed, 0, p_Velocity.y * m_Speed);
         } else {
             p_Velocity = Vector2.zero;
@@ -393,6 +392,7 @@ public class PlayerController : MonoBehaviour
     #region Attack Methods
     private IEnumerator UseAttack(PlayerAttackInfo attack)
     {
+
         if (attack.AttackName == "Shotgun" && !isPunching) {
             isShooting = true;
             Vector3 shootDir = camForward;
@@ -405,6 +405,7 @@ public class PlayerController : MonoBehaviour
             cr_Anim.SetTrigger(attack.TriggerName);
             shotgunAnim.SetTrigger("Rotate");
             yield return new WaitForSeconds(attack.WindUpTime);
+            flash.Play();
 
             for (int i = 0; i < numberOfPellets; i++) {
                 // create a random left / right value
@@ -416,13 +417,14 @@ public class PlayerController : MonoBehaviour
             }
 
             yield return new WaitForSeconds(attack.Cooldown);
+            flash.Stop();
             cr_Anim.ResetTrigger(attack.TriggerName);
             shotgunAnim.ResetTrigger("Rotate");
             attack.ResetCooldown();
             isShooting = false; 
 
         } else if (attack.AttackName == "Punch" && !isShooting) {
-            Vector3 punchDir = new Vector3(camForward.x, 0, camForward.z);
+            Vector3 punchDir = camForward;
             isPunching = true;
             // Set the player to the current direction of the camera
             if (!forwardPressed && !backwardPressed) {
@@ -436,22 +438,20 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(attack.WindUpTime);
             
             foreach (Collider enemy in punchScript.GetEnemyList()) {
-                Rigidbody rb = enemy.gameObject.GetComponent<Rigidbody>();
-                // rb.velocity = Vector3.zero;
-                // rb.AddForce(punchDir * punchForce, ForceMode.Impulse);
                 EnemyController enemyScript = enemy.gameObject.GetComponent<EnemyController>();
-                enemyScript.DecreaseHealth(10);
-                enemyScript.SetIsStunned();
+                enemyScript.DecreaseHealth(50);
+                enemyScript.SetToStunned(punchDir);
             }
-            //Debug.Log(punchScript.GetEnemyList().Count);
 
             yield return new WaitForSeconds(attack.Cooldown);
             cr_Anim.ResetTrigger(attack.TriggerName);
             attack.ResetCooldown();
             shotgun.SetActive(true);
+            flash.Stop();
             isPunching = false;
         }
         
+
 
     }
     #endregion
