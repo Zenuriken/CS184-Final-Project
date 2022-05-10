@@ -32,6 +32,11 @@ public class MainMenuController : MonoBehaviour
     public void PlayArena() {
         SceneManager.LoadScene("Arena");
     }
+
+    public void Play2()
+    {
+        SceneManager.LoadScene("Level 2");
+    }
     #endregion
     
     #region General Application Button Methods
