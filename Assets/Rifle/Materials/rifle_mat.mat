@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: rifle_mat
-  m_Shader: {fileID: -6465566751694194690, guid: 58be8edcc567449a3b0d2637d2fc3350,
+  m_Shader: {fileID: -6465566751694194690, guid: e87631564b11f44df856e594cea2c530,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - HARD_SHADING_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -45,6 +46,22 @@ Material:
         m_Texture: {fileID: 2800000, guid: ccf82dfb44155ff4a9dec5793e08d6ef, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: 5087bb464ab5e7e4486e5bd5aa868aa2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmoothnessTex:
+        m_Texture: {fileID: 2800000, guid: fa21fdef7dc6cec4ca1822db38488fd4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_908433992a7416839dbf1132a2f2cbff_Out_0:
+        m_Texture: {fileID: 2800000, guid: bf91a9f94ae4348b09a32bb9c02a7b4d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -60,19 +77,32 @@ Material:
     m_Ints: []
     m_Floats:
     - Brightness_Rim: 2
+    - HARD_SHADING: 1
     - Rim_Power: 5
     - Toon_Ramp_Offset: 0.5
     - Toon_Ramp_Smoothness: 0
+    - Vector1_962926F1: 0
     - _Ambient: 0
+    - _Black_Offset: -0.5
+    - _DabsRotation: 15
+    - _DabsTiling: 1
+    - _NormalMult: 1
+    - _OcclusionMult: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Rim_Light_Brightness: 0.25
+    - _Rim_Light_Power: 3.2
     - _Shininess: 0.20725726
+    - _Smoothness: 0.583
+    - _Specular_Reflection_Brightness: 0.1
     - _Toon_Ramp_Offset_Point: 0.5
     m_Colors:
     - Toon_Ramp_Tint: {r: 0.490566, g: 0.490566, b: 0.490566, a: 1}
     - _Color: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
     - _ReflectColor: {r: 0.5921569, g: 0.7921569, b: 0.8745098, a: 0.5019608}
     - _SpecColor: {r: 0.6601427, g: 0.76545835, b: 0.8088235, a: 1}
+    - _Specular: {r: 0.2075472, g: 0.2075472, b: 0.2075472, a: 0}
+    - _TextureTiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4131805421038078164
 MonoBehaviour:

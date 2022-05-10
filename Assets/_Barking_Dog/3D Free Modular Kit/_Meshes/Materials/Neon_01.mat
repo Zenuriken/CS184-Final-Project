@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Neon_01
-  m_Shader: {fileID: -6465566751694194690, guid: 58be8edcc567449a3b0d2637d2fc3350,
+  m_Shader: {fileID: -6465566751694194690, guid: e87631564b11f44df856e594cea2c530,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - HARD_SHADING_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -61,12 +62,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: b5c9448ddba954bc0afcc5c19cf42525, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OcclusionTex:
+        m_Texture: {fileID: 2800000, guid: b5c9448ddba954bc0afcc5c19cf42525, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmoothnessTex:
+        m_Texture: {fileID: 2800000, guid: b5c9448ddba954bc0afcc5c19cf42525, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_908433992a7416839dbf1132a2f2cbff_Out_0:
+        m_Texture: {fileID: 2800000, guid: bf91a9f94ae4348b09a32bb9c02a7b4d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -84,12 +101,17 @@ Material:
     m_Ints: []
     m_Floats:
     - Brightness_Rim: 2
+    - HARD_SHADING: 1
     - Rim_Power: 5
     - Toon_Ramp_Offset: 0.5
     - Toon_Ramp_Smoothness: 0
+    - Vector1_962926F1: 1.1
     - _Ambient: 0
+    - _Black_Offset: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
+    - _DabsRotation: 15
+    - _DabsTiling: 44
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EmissionScaleUI: 1
@@ -98,23 +120,31 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NormalMult: 1
+    - _OcclusionMult: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Rim_Light_Brightness: 0
+    - _Rim_Light_Power: 0
     - _Shininess: 0.7
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Specular_Reflection_Brightness: 1
     - _SrcBlend: 1
     - _Toon_Ramp_Offset_Point: 0.5
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - Toon_Ramp_Tint: {r: 0.490566, g: 0.490566, b: 0.490566, a: 1}
-    - _Color: {r: 0.48584908, g: 1, b: 0.9312402, a: 1}
+    - _Color: {r: 0.5613208, g: 1, b: 0.93400407, a: 1}
     - _EmissionColor: {r: 1.7207954, g: 1.306363, b: 0.98202455, a: 1}
     - _EmissionColorUI: {r: 0.97794116, g: 0.7018166, b: 0.35234642, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Specular: {r: 0.2075472, g: 0.2075472, b: 0.2075472, a: 0}
+    - _TextureTiling: {r: 1, g: 1, b: 0, a: 0}
     - _Toon_Ramp_Tinting: {r: 0.9245283, g: 0.90007895, b: 0.8503916, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &3176073845580053932
