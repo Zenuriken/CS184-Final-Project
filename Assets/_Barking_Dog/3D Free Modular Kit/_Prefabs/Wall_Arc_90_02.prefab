@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 486574}
   - component: {fileID: 6526380}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473420}
   - component: {fileID: 6533878}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 426882}
   - component: {fileID: 6528138}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 484998}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall_Arc_90_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 3304816}
   - component: {fileID: 2324226}
   - component: {fileID: 9578420}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall_Arc_90_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

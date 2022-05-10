@@ -5311,6 +5311,9 @@ MonoBehaviour:
   Obstruction: {fileID: 4078481234447869311}
   ObstructionMesh: {fileID: 0}
   LastObstructionMesh: {fileID: 0}
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &4078481232927110476
 GameObject:
   m_ObjectHideFlags: 0
@@ -6821,7 +6824,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4078481234028527650}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7479,7 +7482,7 @@ MonoBehaviour:
     m_TriggerName: isPunching
     m_AbilityGO: {fileID: 0}
     m_offset: {x: 0.4, y: 1.1, z: 1}
-    m_WindUpTime: 0.75
+    m_WindUpTime: 0.5
     m_FrozenTime: 0.75
     m_Cooldown: 1
     m_HealthCost: 0

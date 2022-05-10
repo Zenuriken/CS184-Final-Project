@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3384098}
   - component: {fileID: 2355204}
   - component: {fileID: 6507386}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door_Left_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 421664}
   - component: {fileID: 8249556}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door_Left_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
