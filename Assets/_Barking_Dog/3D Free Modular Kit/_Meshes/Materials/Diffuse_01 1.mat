@@ -130,7 +130,7 @@ Material:
     - _Rim_Light_Brightness: 0
     - _Rim_Light_Power: 0
     - _Rim_Power: 3
-    - _Smoothness: 0.4
+    - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Specular_Reflection_Brightness: 1

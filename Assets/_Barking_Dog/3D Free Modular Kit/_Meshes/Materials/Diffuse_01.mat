@@ -101,7 +101,7 @@ Material:
     - Rim_Power: 5
     - Toon_Ramp_Offset: 0.527
     - Toon_Ramp_Smoothness: 0
-    - Vector1_962926F1: 1.1
+    - Vector1_962926F1: 0
     - _Ambient: 0
     - _Black_Offset: 0
     - _BumpScale: 0.5
@@ -123,11 +123,11 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Rim_Light_Brightness: 0.5
-    - _Rim_Light_Power: 8
+    - _Rim_Light_Power: 16
     - _Smoothness: 0.4
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Specular_Reflection_Brightness: 1
+    - _Specular_Reflection_Brightness: 0.45
     - _SrcBlend: 1
     - _Toon_Ramp_Offset_Point: 0.5
     - _UVSec: 0
