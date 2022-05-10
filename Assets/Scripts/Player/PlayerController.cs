@@ -457,6 +457,7 @@ public class PlayerController : MonoBehaviour
             cr_Anim.ResetTrigger(attack.TriggerName);
             attack.ResetCooldown();
             shotgun.SetActive(true);
+            flash.Stop();
             isPunching = false;
         }
         

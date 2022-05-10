@@ -98,6 +98,7 @@ public class EnemyController : MonoBehaviour
 
     #region Cached References
     private Transform cr_Player;
+    private PlayerController playerScript;
     #endregion
 
     #region Initialization
@@ -113,7 +114,8 @@ public class EnemyController : MonoBehaviour
     }
 
     private void Start() {
-        cr_Player = FindObjectOfType<PlayerController>().transform;
+        playerScript = FindObjectOfType<PlayerController>();
+        cr_Player = playerScript.transform;
         punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
     }
     #endregion
@@ -167,9 +169,8 @@ public class EnemyController : MonoBehaviour
             cc_Anim.SetBool("isMoving", false);
             //cc_Anim.SetBool("isShooting", false);
         } else if (isStunned) {
-            Vector3 stunnedDir = transform.position - cr_Player.position;
-            stunnedDir.Normalize(); 
-            StartCoroutine("Stunned", stunnedDir);
+            Vector3 camForward = playerScript.GetCamForward();
+            StartCoroutine("Stunned", camForward);
         }
     }
     #endregion
@@ -228,8 +229,8 @@ public class EnemyController : MonoBehaviour
         cc_Anim.SetBool("isMoving", false);
         cc_Anim.SetBool("isStunned", true);
 
-
-        cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
+        cc_Rb.velocity = new Vector3(dir.x * m_speed * 8, 0, dir.y * m_speed * 8);
+        //cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
 
         yield return new WaitForSeconds(stunnedDur);
         cc_Anim.SetBool("isStunned", false);

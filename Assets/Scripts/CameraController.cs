@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public Transform Obstruction;
     public MeshRenderer ObstructionMesh;
     public MeshRenderer LastObstructionMesh;
+    public LayerMask EnemyLayer;
     float zoomSpeed = 2f;
     
     // Start is called before the first frame update
@@ -51,7 +52,7 @@ public class CameraController : MonoBehaviour
     void ViewObstructed() {
         RaycastHit hit;
         // If the raycast hits an object
-        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 2.0f)) {
+        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 2.0f, ~EnemyLayer)) {
             if (hit.collider.gameObject.tag != "Player" && hit.collider.gameObject.tag != "Enemy") {
                 Obstruction = hit.transform;
                 ObstructionMesh = Obstruction.gameObject.GetComponent<MeshRenderer>();
@@ -69,7 +70,9 @@ public class CameraController : MonoBehaviour
                 LastObstructionMesh = ObstructionMesh;
 
                 // Hides the wall from view while also keeping the shadows casted by the wall
-                ObstructionMesh.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                if (ObstructionMesh) {
+                    ObstructionMesh.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                }
                 // Checks if the camera should zoom into the wall/player
                 if (Vector3.Distance(Obstruction.position, transform.position) >= 1.5f && Vector3.Distance(transform.position, Target.position) >= 1.0f) {
                     transform.Translate(Vector3.forward * zoomSpeed * Time.deltaTime);
@@ -78,7 +81,9 @@ public class CameraController : MonoBehaviour
 
             } else if (Obstruction.gameObject.tag != "Player") {
                 // Unhide the wall from view
-                ObstructionMesh.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                if (ObstructionMesh) {
+                    ObstructionMesh.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                }
                 // Zoom the camera back to the normal position.
                 if (Vector3.Distance(transform.position, Target.position) < 2.0f) {
                     transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
