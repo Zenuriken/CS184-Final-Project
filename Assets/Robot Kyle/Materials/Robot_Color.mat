@@ -8,10 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Robot_Color
-  m_Shader: {fileID: -6465566751694194690, guid: e87631564b11f44df856e594cea2c530,
+  m_Shader: {fileID: -6465566751694194690, guid: 58be8edcc567449a3b0d2637d2fc3350,
     type: 3}
-  m_ValidKeywords:
-  - HARD_SHADING_ON
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -68,29 +67,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Brightness_Rim: 1.48
+    - Brightness_Rim: 5
     - HARD_SHADING: 1
-    - Rim_Power: 0
-    - Toon_Ramp_Offset: 0.789
+    - Rim_Power: 0.21
+    - Toon_Ramp_Offset: 0.84
     - Toon_Ramp_Smoothness: 0
-    - Vector1_962926F1: 1.1
+    - Vector1_962926F1: 0.668
     - _Ambient: 0
     - _Black_Offset: 1.5
     - _DabsRotation: 11.3
-    - _DabsTiling: 26
+    - _DabsTiling: 200
     - _NormalMult: 1
-    - _OcclusionMult: 1
+    - _OcclusionMult: 0.268
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Rim_Light_Brightness: 0.135
-    - _Rim_Light_Power: 6
+    - _Rim_Light_Brightness: 0.893
+    - _Rim_Light_Power: 30
     - _Smoothness: 0.545
-    - _Specular_Reflection_Brightness: 0.42
+    - _Specular_Reflection_Brightness: 0.55
     - _Toon_Ramp_Offset_Point: 1
     m_Colors:
     - Toon_Ramp_Tint: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 0.9433962, g: 0.92195404, b: 0.87664646, a: 1}
-    - _Specular: {r: 0.2075472, g: 0.2075472, b: 0.2075472, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Specular: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
     - _TextureTiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &3566201211175953044
