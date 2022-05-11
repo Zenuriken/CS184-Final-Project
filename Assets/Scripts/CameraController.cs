@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     public MeshRenderer LastObstructionMesh;
     public LayerMask EnemyLayer;
     float zoomSpeed = 2f;
+    private int layersToCheck;
     
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class CameraController : MonoBehaviour
         Obstruction = Target;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        layersToCheck = LayerMask.GetMask("Player", "Wall");
     }
 
     private void LateUpdate() {
@@ -52,8 +54,8 @@ public class CameraController : MonoBehaviour
     void ViewObstructed() {
         RaycastHit hit;
         // If the raycast hits an object
-        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 2.0f, ~EnemyLayer)) {
-            if (hit.collider.gameObject.tag != "Player" && hit.collider.gameObject.tag != "Enemy") {
+        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 2.0f, layersToCheck)) {
+            if (hit.collider.gameObject.tag != "Player") {
                 Obstruction = hit.transform;
                 ObstructionMesh = Obstruction.gameObject.GetComponent<MeshRenderer>();
 

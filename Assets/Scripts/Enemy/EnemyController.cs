@@ -89,6 +89,7 @@ public class EnemyController : MonoBehaviour
     private bool isStunned;
     private Vector3 stunDirection;
     private int layersToCheck;
+    private bool hasBeenPunched;
     #endregion
 
     #region Cached Components
@@ -100,6 +101,7 @@ public class EnemyController : MonoBehaviour
     #region Cached References
     private Transform cr_Player;
     private PlayerController playerScript;
+    private HUDController hudScript;
     #endregion
 
     #region Initialization
@@ -119,6 +121,7 @@ public class EnemyController : MonoBehaviour
         cr_Player = playerScript.transform;
         punchScript = GameObject.Find("Punch Range").GetComponent<Punch>();
         layersToCheck = LayerMask.GetMask("Player", "Wall");
+        hudScript = FindObjectOfType<HUDController>();
     }
     #endregion
 
@@ -172,6 +175,7 @@ public class EnemyController : MonoBehaviour
             cc_Anim.SetBool("isMoving", false);
             //cc_Anim.SetBool("isShooting", false);
         } else if (isStunned) {
+            hasBeenPunched = true;
             StartCoroutine("Stunned");
         }
     }
@@ -192,7 +196,6 @@ public class EnemyController : MonoBehaviour
         Vector3 shootDir = new Vector3(cr_Player.position.x - firePoint.position.x, 0, cr_Player.position.z - firePoint.position.z);
         rifleAnimator.SetBool("Rotate", true);
         cc_Anim.SetBool("isShooting", true);
-        //Debug.Log("Shooting");
         for (int i = 0; i < numBullets; i++) {
             GameObject go = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
             Rigidbody bullet = go.GetComponent<Rigidbody>();
@@ -209,7 +212,13 @@ public class EnemyController : MonoBehaviour
     public void DecreaseHealth(float amount) {
         p_curHealth -= amount;
         if (p_curHealth <= 0) {
-            ScoreManager.singleton.IncreaseScore(m_Score);
+            int scoreToIncrease = m_Score;
+            if (hasBeenPunched) {
+                scoreToIncrease *= 3;
+            }
+            ScoreManager.singleton.IncreaseScore(scoreToIncrease);
+            hudScript.UpdateCurrentScore(scoreToIncrease);
+            hudScript.UpdateEnemiesRemaining(1);
             if (Random.value < m_HealthPillDropRate) {
                 Instantiate(m_HealthPill, transform.position + pillSpawnOffset, Quaternion.identity);
             }
@@ -236,7 +245,6 @@ public class EnemyController : MonoBehaviour
         cc_Anim.SetBool("isStunned", true);
 
         cc_Rb.velocity = new Vector3(stunDirection.x * m_speed * 8, 0, stunDirection.z * m_speed * 8);
-        //cc_Rb.MovePosition(cc_Rb.position + dir * m_speed * 8 * Time.fixedDeltaTime);
 
         yield return new WaitForSeconds(stunnedDur);
         cc_Anim.SetBool("isStunned", false);

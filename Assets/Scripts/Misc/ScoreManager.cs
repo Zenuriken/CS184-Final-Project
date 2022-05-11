@@ -24,6 +24,11 @@ public class ScoreManager : MonoBehaviour
     #region Score Methods
     public void IncreaseScore(int amount) {
         m_CurScore += amount;
+        UpdateHighScore();
+    }
+
+    public int GetCurrentScore() {
+        return m_CurScore;
     }
 
     private void UpdateHighScore() {

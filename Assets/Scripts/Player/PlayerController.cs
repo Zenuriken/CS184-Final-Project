@@ -37,11 +37,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     [Tooltip("The spread limit")]
     private float spread;
-
-    [SerializeField]
-    [Tooltip("The amount of force for a punch.")]
-    private float punchForce;
-
     #endregion
 
     #region Cached References
@@ -124,8 +119,6 @@ public class PlayerController : MonoBehaviour
         VelocityXHash = Animator.StringToHash("Velocity X");
 
         keys = 0;
-
-
 
         p_FrozenTimer = 0;
         p_CurHealth = m_MaxHealth;
